@@ -31,10 +31,11 @@ This checklist covers: preparing the repository, verifying and configuring the d
 - [ ] **Design** approved by the owner on the preview, at desktop and mobile widths.
 - [ ] **Copy** approved, including the three additions made during the build that were not in the brief (see [REVIEW.md](REVIEW.md), "Decisions made on your behalf").
 - [ ] **Team presentation** approved: Lex's photograph (already added on the review branch) accepted; the applied AI specialist's page treatment confirmed (name and photograph added only if that person has agreed).
-- [ ] **Privacy notice** approved: every amber *owner decision* box resolved and deleted, the draft banner removed, placeholders in square brackets replaced (retention period, notification email service, last-updated date), and a data-protection adviser has read the final text.
+- [ ] **Privacy notice** approved: every amber review box resolved and deleted (retention routine adopted, UK transfer safeguard verified and named, access confirmed), the draft banner removed, bracketed placeholders replaced (retention, safeguard, publication date), and a data-protection adviser has read the final text. See [To-do.md](../To-do.md).
+- [ ] **ICO data protection fee:** register checked and self-assessment completed, with the result recorded internally. Nothing on the site claims ICO registration unless the register shows it.
 - [ ] **Formspree** confirmed by the owner: the notification inbox, who has access, retention and data-processing terms. reCAPTCHA is currently off (see README). A labelled test sent from the preview on 23 November 2026 was confirmed by the owner in both the Formspree dashboard and the notification inbox (domain restriction was off at the time).
 - [ ] **Companies House** record re-checked on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>. Name, number and registered office must match the legal footer exactly. (They matched on 23 November 2026.)
-- [ ] **Public contact address:** decided whether to show one. If so it is added to the page and to the privacy notice.
+- [x] **Public address:** the registered office appears in the footer's legal line only, with no wording that invites visits. No other address is shown.
 - [ ] **Launch pull request merged** to `main` containing the resolutions above. Then run:
 
   ```bash

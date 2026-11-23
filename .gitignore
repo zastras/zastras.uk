@@ -6,3 +6,6 @@ node_modules/
 
 # Original supplied photograph (large, unoptimised): kept locally, never committed
 Polished Corporate Headshot Portrait.png
+
+# Internal compliance records (no personal data, but not for the public repository)
+internal/

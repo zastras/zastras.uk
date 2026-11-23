@@ -230,7 +230,7 @@ for (const file of pages) {
   const bodyText = textOf(noScript);
   const hasOwnerBoxes = /class="owner-decision"/.test(noScript);
   const hasDraftBanner = /class="draft-banner"/.test(noScript);
-  const placeholders = [...bodyText.matchAll(/\[[^\]]*(to be|to follow|TBC)[^\]]*\]/gi)].map((m) => m[0]);
+  const placeholders = [...bodyText.matchAll(/\[[^\]]*(to be|to follow|TBC|publication date)[^\]]*\]/gi)].map((m) => m[0]);
   if (PRODUCTION) {
     if (hasOwnerBoxes) fail(name, "owner-decision boxes are still present");
     if (hasDraftBanner) fail(name, "draft banner is still present");
