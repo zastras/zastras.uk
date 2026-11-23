@@ -18,14 +18,14 @@ For the owner's review of the first version of the site. Written 23 November 202
 
 Browser success is not proof of email delivery, so please confirm both:
 
-- it appears in the Formspree dashboard (check the *Spam* tab as well as the main one); and
+- it appears in the Formspree dashboard, in the main list this time (the first test is in the *Spam* tab); and
 - it reaches the notification inbox.
 
 What happened on the way, for the record:
 
 - The first attempt, while reCAPTCHA was still on, was refused by Formspree with `403: In order to submit via AJAX, you need to set a custom key or reCAPTCHA must be disabled`. Nothing was delivered, and the page kept the visitor's text. That is why the page now **falls back to a normal form post** when it sees that response: if reCAPTCHA is ever switched back on, enquiries still arrive, via Formspree's CAPTCHA page.
 - Two further requests were sent with the hidden honeypot field filled in, labelled "probe - ignore", to check whether the setting had changed (the first returned 403, the second 200). Formspree is meant to discard honeypot submissions silently, but if either shows in the dashboard, ignore it.
-- **Restrict to Domain:** if it is already set to `zastras.uk`, a test from the preview domain would have gone to the spam tab, which is one more reason to look there. Leave it unset until cutover, then set it to `zastras.uk`.
+- **Restrict to Domain:** the first test landed in Formspree's spam folder, because the form was restricted to `zastras.uk` while the preview is served from `zastras.github.io` (the request was accepted, then filed as spam). The owner switched the restriction off and a second labelled test ("TEST SUBMISSION 2") was sent. Leave it off until cutover, then set it to `zastras.uk` (see CUTOVER.md, section F).
 
 ## Decisions made on your behalf
 
