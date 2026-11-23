@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zastras Practical AI | Practical AI for Edinburgh and Glasgow firms</title>
+  <meta name="description" content="Practical AI for smaller firms in Edinburgh and Glasgow. We help you improve one workflow at a time, with the review steps and safeguards to use AI well.">
+  <link rel="canonical" href="https://zastras.uk/">
+
+  <!-- PREVIEW-NOINDEX: temporary. Delete this line (and its twin in privacy/index.html) at launch. See docs/CUTOVER.md. -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Formspree's "Restrict to Domain" relies on the Referer header, so do not tighten this policy. -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#0a1222">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zastras Practical AI">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:title" content="AI that earns its place in your business">
+  <meta property="og:description" content="Practical AI for Edinburgh and Glasgow businesses. We help smaller firms improve one workflow at a time, with the safeguards to use AI well.">
+  <meta property="og:url" content="https://zastras.uk/">
+  <meta property="og:image" content="https://zastras.uk/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Zastras Practical AI: AI that earns its place in your business.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI that earns its place in your business">
+  <meta name="twitter:description" content="Practical AI for Edinburgh and Glasgow businesses. One workflow at a time, with the safeguards to use AI well.">
+  <meta name="twitter:image" content="https://zastras.uk/assets/img/og-image.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Zastras Practical AI",
+    "legalName": "ZASTRAS LTD",
+    "url": "https://zastras.uk/",
+    "logo": "https://zastras.uk/assets/img/logo-mark-512.png",
+    "description": "Practical AI consultancy helping smaller firms in Edinburgh and Glasgow adopt AI one workflow at a time.",
+    "areaServed": [
+      { "@type": "City", "name": "Edinburgh" },
+      { "@type": "City", "name": "Glasgow" }
+    ]
+  }
+  </script>
+
+  <link rel="preload" href="assets/fonts/geist-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <!-- Shared icon and mark definitions, referenced with <use> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="zp-tile" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#1D2F52"/>
+        <stop offset="1" stop-color="#0A1222"/>
+      </linearGradient>
+    </defs>
+    <symbol id="zp-mark" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="15" fill="url(#zp-tile)"/>
+      <rect x=".5" y=".5" width="63" height="63" rx="14.5" fill="none" stroke="#8DA8FF" stroke-opacity=".28"/>
+      <path d="M17 19H47L17 45H47" fill="none" stroke="#DCE6FF" stroke-width="5" stroke-linejoin="miter"/>
+      <circle cx="17" cy="19" r="4.8" fill="#8DA8FF"/>
+      <circle cx="47" cy="45" r="6" fill="#0A1222" stroke="#3DDCC8" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-time" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-badge" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.8L7 21l5-3 5 3-1.5-7.2"/><path d="M10 9l1.5 1.5L14.5 7.5"/></symbol>
+    <symbol id="i-growth" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 15l4-4 3 3 5-6"/><path d="M16 8h4v4"/></symbol>
+    <symbol id="i-house" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-scales" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14"/><path d="M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.5 2 4.5 5"/></symbol>
+    <symbol id="i-plan" viewBox="0 0 24 24"><path d="M4 20V4l16 16H4z"/><path d="M8 20v-3M12 20v-1.5M4 12h3"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header on-dark">
+    <div class="container site-header__inner">
+      <a class="brand" href="#top" aria-label="Zastras Practical AI, back to the top">
+        <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#zp-mark"/></svg>
+        <span class="brand__text">
+          <span class="brand__name">Zastras</span>
+          <span class="brand__sub">Practical AI</span>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__bars" aria-hidden="true"><i></i></span>
+        <span>Menu</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#what-we-do">What we do</a></li>
+          <li><a href="#who-we-help">Who we help</a></li>
+          <li><a href="#approach">Our approach</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <a class="btn btn--primary btn--sm site-header__cta" href="#contact">Discuss a workflow</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Hero ============================================================== -->
+    <section class="section section--dark texture hero on-dark" id="top" aria-labelledby="hero-title">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">Practical AI for Edinburgh and Glasgow businesses</p>
+          <h1 id="hero-title">AI that <span class="accent">earns its place</span> in your business.</h1>
+          <p class="lead">We help smaller firms find useful applications for AI, improve one workflow at a time, and give their people the tools and safeguards to use it well.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#contact">Discuss a workflow
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="#approach">How we work</a>
+          </div>
+          <ul class="principles" aria-label="How we work, in brief">
+            <li>One workflow at a time</li>
+            <li>A person reviews what matters</li>
+            <li>Measured against a baseline</li>
+          </ul>
+        </div>
+
+        <div class="flow-card" role="group" aria-labelledby="flow-title">
+          <div class="flow-card__head">
+            <p class="label" id="flow-title">Illustration: enquiry handling</p>
+            <span class="flow-card__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+          <div class="flow-wrap">
+            <ol class="flow">
+              <li class="flow__item" style="--i:0">
+                <span class="flow__node" aria-hidden="true">1</span>
+                <div>
+                  <p class="flow__title">Enquiry arrives</p>
+                  <p class="flow__text">A tenant reports a leaking tap by email.</p>
+                </div>
+              </li>
+              <li class="flow__item" style="--i:1">
+                <span class="flow__node" aria-hidden="true">2</span>
+                <div>
+                  <p class="flow__title">Draft prepared</p>
+                  <p class="flow__text">Category, urgency and a suggested reply, shown beside the original message.</p>
+                </div>
+              </li>
+              <li class="flow__item flow__item--check" style="--i:2">
+                <span class="flow__node" aria-hidden="true">3</span>
+                <div>
+                  <p class="flow__title">A person reviews <span class="flow__tag">Checkpoint</span></p>
+                  <p class="flow__text">A member of staff checks, edits or rejects the draft before anything is sent.</p>
+                </div>
+              </li>
+              <li class="flow__item" style="--i:3">
+                <span class="flow__node" aria-hidden="true">4</span>
+                <div>
+                  <p class="flow__title">Sent and recorded</p>
+                  <p class="flow__text">The approved reply goes out and the job is logged.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <p class="flow-card__foot">An illustration only. Every workflow starts from the firm's own process, tools and obligations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Positioning ======================================================= -->
+    <section class="statement" aria-label="Our position">
+      <div class="container">
+        <div class="statement__inner">
+          <p class="statement__text">Useful AI, implemented with the judgement and controls that real businesses need.</p>
+          <p class="statement__sub">We do not sell a catalogue of AI tools. We start with one real, repetitive process in your business and work out, with you, whether and how AI should be part of it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Four outcomes ===================================================== -->
+    <section class="section section--paper" id="outcomes" aria-labelledby="outcomes-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">What good looks like</p>
+          <h2 id="outcomes-title">Four outcomes worth measuring</h2>
+          <p class="lead">Every piece of work is aimed at one or more of these. We treat them as outcomes to investigate and measure with you, not as promises.</p>
+        </div>
+
+        <div class="outcomes">
+          <article class="card outcome">
+            <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-time"/></svg></span>
+            <h3>Save time</h3>
+            <p class="outcome__meaning">Reduce repetitive administration and make information easier to find and use.</p>
+            <div class="outcome__example">
+              <p class="label">What it might look like</p>
+              <p>A team spends less time sorting incoming enquiries, and finds the right document or earlier answer without searching through inboxes.</p>
+            </div>
+            <div class="outcome__check">
+              <p class="label">How we would check</p>
+              <p>Minutes per task, before and after, on real examples.</p>
+            </div>
+          </article>
+
+          <article class="card outcome">
+            <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-shield"/></svg></span>
+            <h3>Reduce risk</h3>
+            <p class="outcome__meaning">Introduce appropriate controls, review steps and clearer handling of sensitive information.</p>
+            <div class="outcome__example">
+              <p class="label">What it might look like</p>
+              <p>A drafted response waits at a clear review point before it goes anywhere, and staff know which information belongs in which tool.</p>
+            </div>
+            <div class="outcome__check">
+              <p class="label">How we would check</p>
+              <p>How often drafts need correcting, and what the exceptions teach us.</p>
+            </div>
+          </article>
+
+          <article class="card outcome">
+            <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-badge"/></svg></span>
+            <h3>Improve professional reputation</h3>
+            <p class="outcome__meaning">Give clients a more timely, consistent and considered experience.</p>
+            <div class="outcome__example">
+              <p class="label">What it might look like</p>
+              <p>Clients receive prompt, consistently worded updates, rather than depending on who happened to be free that day.</p>
+            </div>
+            <div class="outcome__check">
+              <p class="label">How we would check</p>
+              <p>Response times and consistency against your own standards.</p>
+            </div>
+          </article>
+
+          <article class="card outcome">
+            <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-growth"/></svg></span>
+            <h3>Create capacity for revenue</h3>
+            <p class="outcome__meaning">Free skilled staff to spend more time on valuable client work and opportunities.</p>
+            <div class="outcome__example">
+              <p class="label">What it might look like</p>
+              <p>Senior people get hours back for client work, new enquiries or business development, when that time is deliberately redirected.</p>
+            </div>
+            <div class="outcome__check">
+              <p class="label">How we would check</p>
+              <p>Where the freed time actually goes.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-info"/></svg>
+          <span><strong>Time saved is not automatically money saved.</strong> It only becomes valuable when it is put to use, so we measure both the time released and what happens to it.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- What we do ======================================================== -->
+    <section class="section section--deep texture on-dark" id="what-we-do" aria-labelledby="what-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">What we do</p>
+          <h2 id="what-title">One workflow, from first look to everyday use</h2>
+          <p class="lead">Three connected services, each building on the last. We focus on a single process at a time, so the result can be tested, understood and trusted.</p>
+        </div>
+
+        <div class="services">
+          <article class="service">
+            <p class="service__num">01</p>
+            <h3>Process review</h3>
+            <p>We work to understand one real workflow: how often it happens, how long it takes, which tools and information it uses, what goes wrong and who approves the result.</p>
+            <div class="service__out">
+              <p class="label">You get</p>
+              <p>A focused recommendation and a pilot scope.</p>
+            </div>
+          </article>
+          <article class="service">
+            <p class="service__num">02</p>
+            <h3>One-workflow pilot</h3>
+            <p>We configure and test an improvement against representative normal and difficult examples. People stay in control of important outputs, and we compare the pilot with the original process.</p>
+            <div class="service__out">
+              <p class="label">You get</p>
+              <p>A tested workflow, compared with how you work today.</p>
+            </div>
+          </article>
+          <article class="service">
+            <p class="service__num">03</p>
+            <h3>Training and ongoing care</h3>
+            <p>We help your staff use the workflow, review exceptions and failures, track adoption and adjust the process as the business changes.</p>
+            <div class="service__out">
+              <p class="label">You get</p>
+              <p>A team that can use, check and adjust it.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="capabilities">
+          <p class="label">Supporting capabilities, used where the workflow needs them</p>
+          <ul class="chips">
+            <li class="chip">AI tool selection</li>
+            <li class="chip">Appropriate-use rules</li>
+            <li class="chip">Enquiry handling</li>
+            <li class="chip">Document intake</li>
+            <li class="chip">Source-linked summaries</li>
+            <li class="chip">Drafting assistance</li>
+            <li class="chip">Staff training</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who we help ======================================================= -->
+    <section class="section section--paper" id="who-we-help" aria-labelledby="who-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Who we help</p>
+          <h2 id="who-title">Starting points for a first conversation</h2>
+          <p class="lead">We work with owner-led and partner-led firms where skilled people lose hours to repetitive, document-heavy work. These are places a conversation might begin, not a fixed menu.</p>
+        </div>
+
+        <div class="sectors">
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-house"/></svg></span>
+              <h3>Letting agents</h3>
+            </div>
+            <div class="sector__body">
+              <p>Sort maintenance enquiries and prepare updates for staff review.</p>
+            </div>
+          </article>
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-calc"/></svg></span>
+              <h3>Accountancy practices</h3>
+            </div>
+            <div class="sector__body">
+              <p>Organise client document intake, missing-item checklists and follow-up drafts.</p>
+            </div>
+          </article>
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-scales"/></svg></span>
+              <h3>Law firms</h3>
+            </div>
+            <div class="sector__body">
+              <p>Support matter intake, document checklists and source-linked summaries under solicitor review.</p>
+            </div>
+          </article>
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-people"/></svg></span>
+              <h3>Specialist recruiters</h3>
+            </div>
+            <div class="sector__body">
+              <p>Turn role briefs into candidate-summary drafts and approved follow-ups.</p>
+            </div>
+          </article>
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-plan"/></svg></span>
+              <h3>Architecture practices</h3>
+            </div>
+            <div class="sector__body">
+              <p>Prepare meeting actions and initial proposal material for professional review.</p>
+            </div>
+          </article>
+          <article class="card sector">
+            <div class="sector__top">
+              <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+              <h3>Dental practices</h3>
+            </div>
+            <div class="sector__body">
+              <p>Improve appointment administration and non-clinical enquiries.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-info"/></svg>
+          <span><strong>The right use case depends on your firm's actual work, systems and obligations.</strong> In every case the qualified person stays the decision-maker. AI supports the judgement of solicitors, accountants, clinicians and advisers; it does not replace it.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Our approach ====================================================== -->
+    <section class="section section--dark texture on-dark" id="approach" aria-labelledby="approach-title">
+      <div class="container approach">
+        <div class="approach__intro">
+          <p class="eyebrow">Our approach</p>
+          <h2 id="approach-title">Considered first, then manageable</h2>
+          <p class="lead">A clear sequence, so you know what happens next, who decides, and how we will know whether it worked.</p>
+          <p class="throughout"><strong>Throughout:</strong> sensitive information, accuracy and human accountability matter at every step, not just at the end.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Observe the existing process</h3>
+              <p>We look at the work as it is actually done, not only as the procedure describes it.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Establish a baseline</h3>
+              <p>How often it happens, how long it takes and where it goes wrong, so there is something honest to compare against.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Agree what information and tools may be used</h3>
+              <p>Clear boundaries for sensitive information, settled before anything is built.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Build and test a focused workflow</h3>
+              <p>One workflow, tested on representative normal and difficult examples.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Set human review and escalation points</h3>
+              <p>Who checks what, and what happens when the answer is unclear.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Train the team</h3>
+              <p>Practical sessions on your own workflow, including what to do when it gets something wrong.</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true"></span>
+            <div>
+              <h3>Measure the result and improve it</h3>
+              <p>Compare with the baseline, review the exceptions and adjust as the business changes.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Team ============================================================== -->
+    <section class="section section--paper" id="team" aria-labelledby="team-title">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Team</p>
+          <h2 id="team-title">Security discipline and applied AI, in one team</h2>
+          <p class="lead">Handling sensitive information well is the foundation of useful AI. Our team combines security experience with hands-on work turning AI into everyday workflows.</p>
+        </div>
+
+        <div class="team">
+          <!-- ===== Profile 1: Lex Sobrinho =====
+               To swap the photograph: export a new image at 6:5 (for example 1200 x 1000 px) and a half-size copy,
+               save both in assets/img/team/, then update src, srcset, width, height and alt below. The frame always
+               crops to 6:5 with object-fit: cover; nudge --portrait-pos (horizontal vertical) if a crop is off. See README. -->
+          <article class="card profile" aria-labelledby="profile-lex">
+            <figure class="portrait" style="--portrait-pos: 50% 30%">
+              <img src="assets/img/team/lex-sobrinho-1200.webp"
+                   srcset="assets/img/team/lex-sobrinho-600.webp 600w, assets/img/team/lex-sobrinho-1200.webp 1200w"
+                   sizes="(min-width: 56rem) 35rem, calc(100vw - 2.5rem)"
+                   width="1200" height="1000" loading="lazy" decoding="async"
+                   alt="Lex Sobrinho, smiling, in a navy jacket and white shirt against a plain grey background">
+            </figure>
+            <div class="profile__body">
+              <h3 id="profile-lex">Lex Sobrinho</h3>
+              <p class="profile__role">Founder | Security and AI Transformation</p>
+              <div class="profile__bio">
+                <p>Lex brings senior experience in security, infrastructure and risk from financial services, including Tesco Bank, HSBC and Lloyds, as well as other regulated organisations. He understands the controls that matter when a business handles sensitive information: who can access it, how tools use it, and who remains accountable for the result.</p>
+                <p>At Zastras Practical AI, Lex helps smaller firms find valuable uses for AI and put them into practice with appropriate safeguards, staff training and measurable outcomes.</p>
+              </div>
+              <p class="profile__footnote"><span>The organisations named describe Lex's previous career experience. None of them is a client of, or endorses, Zastras Practical AI.</span></p>
+            </div>
+          </article>
+
+          <!-- ===== Profile 2: Applied AI Specialist =====
+               The name, photograph and biography are not yet public. The abstract graphic is intentional.
+               To add them later: replace the <img> (src, width, height, alt), the <h3> and the role line,
+               and edit the paragraphs. Keep the filename generic until the person agrees to be named. See README. -->
+          <article class="card profile" aria-labelledby="profile-specialist">
+            <figure class="portrait" style="--portrait-pos: 50% 40%">
+              <img src="assets/img/team/applied-ai-specialist.svg" width="1200" height="1000" loading="lazy" decoding="async" alt="">
+            </figure>
+            <div class="profile__body">
+              <h3 id="profile-specialist">Applied AI Specialist</h3>
+              <p class="profile__role">Applied AI | Security-minded implementation</p>
+              <div class="profile__bio">
+                <p>Our applied AI specialist began his career in information security and now focuses on turning AI capabilities into workflows that people can use in their day-to-day work. He considers how information enters a process, how outputs are checked and where a person needs to make the decision.</p>
+                <p>His security background complements the team's approach to practical, responsible implementation.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact =========================================================== -->
+    <section class="section section--dark texture on-dark" id="contact" aria-labelledby="contact-title">
+      <div class="container contact">
+        <div class="contact__intro">
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Tell us what takes too much time.</h2>
+          <p class="lead">Describe one process that eats into your week or causes friction. We will start with a conversation to understand whether there is a useful fit. No pressure, and no obligation.</p>
+
+          <ol class="next-steps" aria-label="What happens next">
+            <li>You send a short description of one process.</li>
+            <li>We reply to arrange an initial conversation.</li>
+            <li>We tell you plainly whether there is a useful fit, and what a first step could look like.</li>
+          </ol>
+
+          <div class="callout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-shield"/></svg>
+            <div>
+              <p><strong>Please do not include confidential client information or sensitive personal data in this initial enquiry.</strong></p>
+              <p>Find out how we handle what you send in our <a href="privacy/">privacy notice</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card" id="enquiry">
+          <div id="form-panel">
+            <h3 id="form-title">Start with one process</h3>
+            <p class="form-card__intro">Fields marked <span aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+            <!-- Posts straight to Formspree. Works without JavaScript; assets/js/main.js adds inline status messages. -->
+            <form class="form" id="contact-form" action="https://formspree.io/f/maeolban" method="POST" aria-labelledby="form-title">
+              <div class="field">
+                <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
+                <input class="input" id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" aria-describedby="f-name-err">
+                <p class="field__error" id="f-name-err"></p>
+              </div>
+
+              <div class="field">
+                <label for="f-email">Work email <span class="req" aria-hidden="true">*</span></label>
+                <input class="input" id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" aria-describedby="f-email-err">
+                <p class="field__error" id="f-email-err"></p>
+              </div>
+
+              <div class="field">
+                <label for="f-org">Organisation <span class="opt">(optional)</span></label>
+                <input class="input" id="f-org" name="organisation" type="text" autocomplete="organization" maxlength="120">
+              </div>
+
+              <div class="field">
+                <label for="f-message">What would you like to improve? <span class="req" aria-hidden="true">*</span></label>
+                <textarea class="input" id="f-message" name="message" rows="6" required minlength="10" maxlength="3000" aria-describedby="f-message-hint f-message-err"></textarea>
+                <p class="hint" id="f-message-hint">One process is plenty: what happens, who does it, and where time or accuracy suffers.</p>
+                <p class="field__error" id="f-message-err"></p>
+              </div>
+
+              <!-- Spam protection: a honeypot that people never see. Formspree discards submissions where it is filled in. -->
+              <div class="hp" aria-hidden="true">
+                <label>Leave this field empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
+              </div>
+              <input type="hidden" name="_subject" value="New enquiry from the Zastras Practical AI website">
+
+              <div class="form__actions">
+                <div class="form-status" id="form-status" role="status" aria-live="polite" aria-atomic="true"></div>
+                <div class="form-status" id="form-error" role="alert" aria-atomic="true"></div>
+                <button class="btn btn--primary btn--block" type="submit" id="submit-btn">
+                  <span data-label>Send enquiry</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+                </button>
+                <p class="form__small">How we use these details is explained in our <a href="privacy/">privacy notice</a>.</p>
+              </div>
+            </form>
+          </div>
+
+          <div class="success" id="form-success" hidden>
+            <span class="success__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h3 id="success-title" tabindex="-1">Thank you. Your enquiry has been sent.</h3>
+            <p>We will read it and reply to the email address you gave us to arrange a conversation. Until then, please keep confidential client information out of any follow-up.</p>
+            <button class="btn btn--outline" type="button" id="send-another">Send another enquiry</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer on-dark">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top" aria-label="Zastras Practical AI, back to the top">
+            <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href="#zp-mark"/></svg>
+            <span class="brand__text">
+              <span class="brand__name">Zastras</span>
+              <span class="brand__sub">Practical AI</span>
+            </span>
+          </a>
+          <p class="footer__tag">Practical AI for smaller firms in Edinburgh and Glasgow.</p>
+        </div>
+        <nav class="footer__nav" aria-label="Footer">
+          <ul>
+            <li><a href="#what-we-do">What we do</a></li>
+            <li><a href="#who-we-help">Who we help</a></li>
+            <li><a href="#approach">Our approach</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="privacy/">Privacy notice</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="footer__legal">Zastras Practical AI is a service of ZASTRAS LTD. Registered in Scotland. Company number SC832156. Registered office: 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP.</p>
+    </div>
+  </footer>
+</body>
+</html>

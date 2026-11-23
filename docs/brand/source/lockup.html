@@ -1,0 +1,18 @@
+<!doctype html>
+<!-- Source for docs/brand/lockup-on-dark.png and lockup-on-light.png. Append ?theme=light for the light version. -->
+<html lang="en-GB"><head><meta charset="utf-8"><style>
+  @font-face { font-family: "Geist"; src: url("../../../site/assets/fonts/geist-latin-wght.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../../../site/assets/fonts/geist-mono-latin-wght.woff2") format("woff2"); font-weight: 100 900; }
+  *{margin:0;box-sizing:border-box} html,body{background:transparent}
+  .l{display:inline-flex;align-items:center;gap:22px;padding:28px;font-family:"Geist",sans-serif;color:#fff}
+  .l svg{width:96px;height:96px}
+  .l b{display:block;font-size:56px;font-weight:650;letter-spacing:-.03em;line-height:1}
+  .l span{display:block;margin-top:11px;font-family:"Geist Mono",monospace;font-size:19px;letter-spacing:.26em;text-transform:uppercase;color:#8da8ff;line-height:1}
+  body.light .l{color:#0a1222} body.light .l span{color:#2650e6}
+</style></head><body>
+<div class="l" id="l"><svg viewBox="0 0 64 64"><defs><linearGradient id="t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1D2F52"/><stop offset="1" stop-color="#0A1222"/></linearGradient></defs>
+<rect width="64" height="64" rx="15" fill="url(#t)"/><rect x=".5" y=".5" width="63" height="63" rx="14.5" fill="none" stroke="#8DA8FF" stroke-opacity=".28"/>
+<path d="M17 19H47L17 45H47" fill="none" stroke="#DCE6FF" stroke-width="5"/><circle cx="17" cy="19" r="4.8" fill="#8DA8FF"/><circle cx="47" cy="45" r="6" fill="#0A1222" stroke="#3DDCC8" stroke-width="3.2"/></svg>
+<div><b>Zastras</b><span>Practical AI</span></div></div>
+<script>if(location.search.includes('light'))document.body.classList.add('light')</script>
+</body></html>

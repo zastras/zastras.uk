@@ -3,3 +3,6 @@
 .claude/
 node_modules/
 *.log
+
+# Original supplied photograph (large, unoptimised): kept locally, never committed
+Polished Corporate Headshot Portrait.png
