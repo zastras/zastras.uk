@@ -25,6 +25,13 @@ The lawful basis is decided: legitimate interests, Article 6(1)(f) UK GDPR. The 
 
 ## Launch
 
+The cutover was approved on 23 November 2026, with the DNS switch **held until the privacy items above are resolved**. You make the DNS and GitHub settings edits; Claude supplies the values and verifies from outside with `node scripts/verify-cutover.mjs`.
+
+Safe to do now (additive; nothing changes for visitors or email):
+
+- [ ] In the DNS panel, lower the TTL of the apex A record and the `www` CNAME to 300 seconds (they are 14400 today), at least 4 hours before the switch.
+- [ ] In GitHub, as an organisation owner: *zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`, and add the TXT record GitHub shows (named `_github-pages-challenge-zastras`) in the DNS panel, then click Verify. Do **not** set the custom domain on the repository yet: that would make the preview URL redirect to the still-Squarespace domain.
+
 - [ ] Approve the design, copy and team presentation on the preview.
 - [ ] Re-check the Companies House record on the day.
 - [ ] Work through [docs/CUTOVER.md](docs/CUTOVER.md): DNS inventory, GitHub domain verification, switch the web records, HTTPS, post-switch checks, then remove `noindex`.

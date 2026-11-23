@@ -57,8 +57,14 @@ Take a record of everything, so you can restore it exactly.
   for h in www _dmarc google._domainkey _domainconnect; do echo "== $h.zastras.uk"; dig +noall +answer $h.zastras.uk ANY; dig +noall +answer $h.zastras.uk TXT; dig +noall +answer $h.zastras.uk CNAME; done
   ```
 
-- [ ] Note the **TTL** of each record. (They were not captured on 23 November 2026; read them from the DNS panel.)
-- [ ] Optional but sensible: **lower the TTLs** on the apex A and `www` records to 300 seconds 24 to 48 hours beforehand, so a rollback takes effect quickly.
+- [ ] Run the read-only snapshot, which also confirms the mail records are as expected, and keep the output:
+
+  ```bash
+  node scripts/verify-cutover.mjs --before
+  ```
+
+- [ ] Note the **TTL** of each record. On 23 November 2026 every record had a TTL of **14400 seconds (4 hours)**, so resolvers can keep the old Squarespace answer for up to 4 hours after the switch, and a rollback would take as long.
+- [ ] **Lower the TTLs** on the apex A and `www` records to 300 seconds at least 4 hours (the old TTL) before the switch, so both the switch and any rollback take effect within minutes.
 
 **What was observed on 23 November 2026** (by `dig`; confirm against the DNS panel, which is the source of truth):
 
@@ -124,7 +130,13 @@ In Squarespace DNS:
   dig +noall +answer www.zastras.uk      # zastras.github.io. then GitHub addresses
   ```
 
-- [ ] **Email still intact:** re-run the MX, SPF and DKIM lookups from Section B. They must match the "before" output exactly. Send a test email to the domain from outside, and one from it, and confirm both arrive.
+- [ ] Run the verifier, which checks the web records, the preserved mail records, HTTPS, redirects and the pages in one go (re-run until it is clean; DNS can lag for up to a TTL):
+
+  ```bash
+  node scripts/verify-cutover.mjs --after
+  ```
+
+- [ ] **Email still intact:** the verifier checks MX, SPF, DKIM and the name servers; also re-run the lookups from Section B if you want to see them yourself. They must match the "before" output exactly. Send a test email to the domain from outside, and one from it, and confirm both arrive.
 
 ## E. Enable and check HTTPS
 
@@ -154,6 +166,7 @@ Until now every page carries `<meta name="robots" content="noindex, nofollow">`,
 
 - [ ] Open a pull request that **deletes the two `PREVIEW-NOINDEX` blocks** (the comment and the `noindex` meta tag) in `site/index.html` and `site/privacy/index.html`.
 - [ ] `node scripts/check-site.mjs --production` now passes with no failures (and no placeholder warning).
+- [ ] After the deploy, `node scripts/verify-cutover.mjs --after --indexable` reports no problems.
 - [ ] Merge; wait for the deploy; confirm `curl -s https://zastras.uk | grep -ci noindex` prints `0`, and the same for `/privacy/`.
 - [ ] Optional: add `https://zastras.uk` to Google Search Console and submit `https://zastras.uk/sitemap.xml`.
 
