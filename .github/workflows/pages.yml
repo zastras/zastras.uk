@@ -3,7 +3,9 @@ name: Check and deploy site
 # Pull requests run the checks only. Pushes to main (and manual runs) also publish ./site to GitHub Pages.
 on:
   push:
-    branches: [main]
+    # build/initial-site is TEMPORARY: it publishes the review preview from the pull request branch.
+    # Remove it (and its deployment-branch policy in Settings, Environments) once the PR is merged.
+    branches: [main, build/initial-site]
   pull_request:
   workflow_dispatch:
 
