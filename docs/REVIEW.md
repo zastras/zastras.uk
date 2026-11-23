@@ -52,10 +52,10 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 **Privacy notice** (rewritten on 23 November 2026 from the owner's decisions; review boxes on the page mark what is open)
 
 - Uses the supplied wording, with legitimate interests (Article 6(1)(f) UK GDPR) as the lawful basis.
-- **Held back as placeholders** because the facts are not yet true: the 12-month retention paragraph (Formspree stores submissions until deleted by hand) and the UK transfer safeguard (no UK Addendum or IDTA found for Formspree).
-- Shown as supplied but flagged to verify: who can access enquiries.
+- **Filled in from the owner's answers on 23 November 2026:** access (the Director only), the 12-month retention paragraph, and the UK transfer safeguard (the UK Extension to the Data Privacy Framework, which the owner reported Formspree's listing includes). The retention sentence stays true only while the monthly and quarterly deletion routine runs. The transfer sentence depends on the listing being active, which could not be checked from this build and is confirmed on launch day.
+- Still open on the page: that confirmation, plus the owner's approval of the two additions below.
 - Added beyond the supplied wording: a short website-hosting section (GitHub logs visitor IP addresses, per GitHub's documentation) and a sentence that the services necessarily receive technical details such as an IP address.
-- The ICO fee is a company task, not a statement in the notice; only the complaint route is mentioned. See [To-do.md](../To-do.md).
+- **ICO:** the company is on the ICO register (checked on the register on 23 November 2026). The notice does not claim it, because the fee is a company obligation and not a statement for visitors; only the complaint route is mentioned. See [To-do.md](../To-do.md).
 
 ## Remaining inputs
 
@@ -63,8 +63,8 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 |---|---|
 | **Lex's photograph** | **Added** (a 6:5 crop of the supplied headshot, two WebP sizes, 34 KB and 12 KB, no metadata). To swap it later: [README, "Replacing the two team images"](../README.md#replacing-the-two-team-images). The original 1.9 MB PNG stays in the project folder and is git-ignored, not committed. |
 | **The applied AI specialist's name and photograph** | Only when that person agrees. Until then the card shows the abstract graphic and the title. Nothing identifying is in the repository, including file names, alt text and commit history. |
-| **Notification inbox: who has access** | Delivery is confirmed. Still to settle for the privacy notice: who can see the Formspree account and the inbox, and for how long enquiries are kept. |
-| **Privacy-notice open items** | See [To-do.md](../To-do.md): retention routine, UK transfer safeguard, access confirmation, ICO fee check, signing the internal assessment. |
+| **Notification inbox: who has access** | Delivery is confirmed, and access is the Director only (owner, 23 November 2026). Two-factor authentication on the Formspree account and the mailbox is still to check. |
+| **Privacy-notice open items** | See [To-do.md](../To-do.md): confirm Formspree's Data Privacy Framework status on launch day, put the 12-month deletion routine in the diary, approve the hosting section and cookie wording, sign the internal assessment. |
 | **Companies House re-check** on launch day | The legal footer. It matched the official record on 23 November 2026. |
 
 ## Checks performed and results
