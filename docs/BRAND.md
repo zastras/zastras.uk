@@ -96,9 +96,9 @@ Defined once in `site/assets/css/main.css`, in this order of the file: tokens, b
 
 ## Imagery and graphics
 
-Used: the grid texture, nodes and links, the example workflow panel, line icons in one consistent weight, an abstract node-graph graphic in place of the applied AI specialist's portrait, and a dashed-guide placeholder where Lex's photograph will go.
+Used: the grid texture, nodes and links, the example workflow panel, line icons in one consistent weight, an abstract node-graph graphic in place of the applied AI specialist's portrait, and Lex's own photograph, cropped to the card's 6:5 frame.
 
-Avoided on purpose: robot faces, glowing brains, circuit-board stock art, server-room photographs, neon, gradients behind long text, and any fabricated human portrait. The portrait placeholders are clearly designed objects, not photographs.
+Avoided on purpose: robot faces, glowing brains, circuit-board stock art, server-room photographs, neon, gradients behind long text, and any fabricated human portrait. The applied AI specialist's abstract graphic is clearly a designed object, not a photograph, so nobody could mistake it for a real portrait.
 
 ## Motion
 

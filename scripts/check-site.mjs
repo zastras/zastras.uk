@@ -156,6 +156,12 @@ for (const file of pages) {
     }
   }
 
+  for (const t of [...tags(noScript, "img"), ...tags(noScript, "source")]) {
+    for (const candidate of (t.attrs.srcset || "").split(",").map((x) => x.trim().split(/\s+/)[0]).filter(Boolean)) {
+      refs.push({ tag: "srcset", url: candidate, attrs: t.attrs });
+    }
+  }
+
   for (const { tag, url } of refs) {
     if (/^(mailto:|tel:|javascript:|data:)/i.test(url)) continue;
     if (/^https?:\/\//i.test(url)) {

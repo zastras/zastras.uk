@@ -96,18 +96,18 @@ Both cards are in the `#team` section of `site/index.html`, each with a comment 
 
 ### Lex Sobrinho
 
-1. Prepare the photograph: landscape or portrait both work; about **1200 × 1000 px** or larger, with the face in the upper half. Save as JPEG or WebP, ideally under 200 KB. For example, on macOS: `sips -Z 1600 photo.jpg --out lex-sobrinho.jpg` or `cwebp -q 80 photo.png -o lex-sobrinho.webp`.
-2. **Remove location and camera metadata before committing.** This repository is public. Tools such as `exiftool -all= photo.jpg` do this.
-3. Copy it to `site/assets/img/team/lex-sobrinho.jpg`.
-4. In the `<img>` for the Lex card, change `src`, set `width` and `height` to the file's real pixel size, and change `alt` to `Lex Sobrinho`.
-5. If the crop cuts off the head, adjust `--portrait-pos` on the surrounding `<figure>` (for example `50% 15%` shows more of the top).
-6. Delete `lex-sobrinho-placeholder.svg` once it is no longer used.
+Lex's photograph is in place: a 6:5 crop of the supplied headshot, exported as WebP at two sizes (`lex-sobrinho-1200.webp`, about 34 KB, and `lex-sobrinho-600.webp`, about 12 KB) and referenced with `srcset`. The original, much larger PNG is kept out of the repository by `.gitignore`. To swap it for a different photograph without touching the layout:
+
+1. Crop to **6:5** (the frame's shape), face in the upper half, then export two copies: **1200 × 1000 px** and **600 × 500 px**, as WebP or JPEG. For example: `cwebp -q 80 -resize 1200 1000 crop.png -o lex-sobrinho-1200.webp` and the same with `600 500`.
+2. **Remove location and camera metadata.** This repository is public. `cwebp` from a PNG leaves none behind; for JPEGs use `exiftool -all= photo.jpg`.
+3. Overwrite the two files in `site/assets/img/team/`. If the file names, sizes or format change, update `src`, `srcset`, `width`, `height` and `alt` on the `<img>` in the first card.
+4. If the crop cuts off the head, adjust `--portrait-pos` on the surrounding `<figure>` (for example `50% 15%` shows more of the top). A frame that is not exactly 6:5 is cropped by `object-fit: cover`, so nothing breaks.
 
 ### The applied AI specialist
 
 The card deliberately shows an abstract graphic (`applied-ai-specialist.svg`) and the public title only. **Do not add a name, initial or any identifying detail until the person has agreed to be named.** When they have:
 
-1. Follow the same photograph steps, saving the file under their name (for example `firstname-lastname.jpg`).
+1. Follow the same photograph steps (6:5 crop, two sizes, metadata removed), saving the files under their name (for example `firstname-lastname-1200.webp`).
 2. In the second card, replace the `<img>` (`src`, `width`, `height`, `alt`), the `<h3>`, the role line and the biography.
 3. Keep the `aria-labelledby` and `id` pair in step if you rename the heading's `id`.
 4. Remove `applied-ai-specialist.svg`.

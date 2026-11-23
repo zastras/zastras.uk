@@ -75,7 +75,7 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 
 | Input | Where it goes |
 |---|---|
-| **Lex's photograph** | Replace the placeholder in the first team card. Steps: [README, "Replacing the two team images"](../README.md#replacing-the-two-team-images). Strip location metadata first; the repository is public. |
+| **Lex's photograph** | **Added** (a 6:5 crop of the supplied headshot, two WebP sizes, 34 KB and 12 KB, no metadata). To swap it later: [README, "Replacing the two team images"](../README.md#replacing-the-two-team-images). The original 1.9 MB PNG stays in the project folder and is git-ignored, not committed. |
 | **The applied AI specialist's name and photograph** | Only when that person agrees. Until then the card shows the abstract graphic and the title. Nothing identifying is in the repository, including file names, alt text and commit history. |
 | **Public contact address**, if one is to be shown | The contact section and the privacy notice. Today the form is the only route, and the error messages do not offer a fallback address. |
 | **Notification inbox confirmation** | Confirm in Formspree where notifications go, who can access them, then test (see above). |

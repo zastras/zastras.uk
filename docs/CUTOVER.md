@@ -30,7 +30,7 @@ This checklist covers: preparing the repository, verifying and configuring the d
 
 - [ ] **Design** approved by the owner on the preview, at desktop and mobile widths.
 - [ ] **Copy** approved, including the three additions made during the build that were not in the brief (see [REVIEW.md](REVIEW.md), "Decisions made on your behalf").
-- [ ] **Team presentation** approved: Lex's photograph supplied and added; the applied AI specialist's page treatment confirmed (name and photograph added only if that person has agreed).
+- [ ] **Team presentation** approved: Lex's photograph (already added on the review branch) accepted; the applied AI specialist's page treatment confirmed (name and photograph added only if that person has agreed).
 - [ ] **Privacy notice** approved: every amber *owner decision* box resolved and deleted, the draft banner removed, placeholders in square brackets replaced (retention period, notification email service, last-updated date), and a data-protection adviser has read the final text.
 - [ ] **Formspree** confirmed by the owner: the notification inbox, who has access, retention, data-processing terms, and the **reCAPTCHA decision** (on: visitors are sent through Formspree's CAPTCHA page; off: they stay on the site, protected by the honeypot and Restrict to Domain). See README, "Settings that live in the Formspree dashboard". A real test submission has been made from the preview and confirmed in both the Formspree dashboard and the notification inbox.
 - [ ] **Companies House** record re-checked on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>. Name, number and registered office must match the legal footer exactly. (They matched on 23 November 2026.)
