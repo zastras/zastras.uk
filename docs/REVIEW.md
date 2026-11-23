@@ -34,7 +34,7 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 - **The repository is public.** GitHub Pages is only available for public repositories on a free organisation plan. The code contains nothing secret (the Formspree endpoint is public by design).
 - **Fonts:** Geist and Geist Mono (SIL Open Font License), self-hosted as latin woff2 subsets (29 KB and 23 KB). No Google Fonts or other third-party requests.
 - **Commits use GitHub's no-reply address**, so no personal email address is published in the history.
-- **Temporary workflow trigger:** `.github/workflows/pages.yml` also deploys the `build/initial-site` branch so the preview exists before anything is merged. Remove that branch from the workflow, and from *Settings, Environments, github-pages, Deployment branches*, when the pull request is merged.
+- **Review-branch deploys:** while the pull request was open, the workflow also deployed the `build/initial-site` branch so the preview existed before merging. That trigger, and the branch's entry under *Settings, Environments, github-pages, Deployment branches*, were removed at merge. From now on only `main` publishes.
 
 **Copy and content added beyond the brief** (all framed as things to investigate, none as results)
 
