@@ -1,0 +1,6 @@
+# Crawling is allowed. The preview is kept out of search results by a noindex meta tag in each page;
+# remove that tag at launch (see docs/CUTOVER.md).
+User-agent: *
+Allow: /
+
+Sitemap: https://zastras.uk/sitemap.xml
