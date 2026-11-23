@@ -258,6 +258,19 @@
           return;
         }
 
+        // While reCAPTCHA is switched on for the form, Formspree refuses background (AJAX) submissions
+        // with a 403. Rather than fail, hand the same data to a normal form post, which Formspree accepts
+        // and which takes the visitor through Formspree's own security check. Nothing is lost.
+        if (res.status === 403 && res.data && typeof res.data.error === "string" && /ajax|recaptcha/i.test(res.data.error)) {
+          setBusy(true);
+          errorEl.textContent = "";
+          errorEl.className = "form-status";
+          statusEl.className = "form-status is-info";
+          statusEl.textContent = "One moment: taking you to the form service\u2019s security check to finish sending\u2026";
+          HTMLFormElement.prototype.submit.call(form);
+          return;
+        }
+
         var errors = res.data && Array.isArray(res.data.errors) ? res.data.errors : [];
         if (res.status >= 400 && res.status < 500 && errors.length && applyServerErrors(errors)) return;
 
