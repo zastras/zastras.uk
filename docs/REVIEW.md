@@ -12,32 +12,20 @@ For the owner's review of the first version of the site. Written 23 November 202
 | The reasoning behind the visual identity | [BRAND.md](BRAND.md) |
 | How to launch | [CUTOVER.md](CUTOVER.md) |
 
-## Two things that need a decision before the form can be tested end to end
+## Contact form: status
 
-### 1. Formspree is refusing background (AJAX) submissions
+**Needs one confirmation from you.** On 23 November 2026, after reCAPTCHA was switched off for the Formspree form, one clearly labelled test enquiry was sent from the live preview page (name "TEST SUBMISSION - please ignore", organisation "Automated build check", sender `test-submission@example.com`). Formspree accepted it (HTTP 200, `ok: true`) and the page showed its success message.
 
-A real submission from the preview page was rejected by Formspree with HTTP 403:
+Browser success is not proof of email delivery, so please confirm both:
 
-> In order to submit via AJAX, you need to set a custom key or reCAPTCHA must be disabled in this form's settings page.
+- it appears in the Formspree dashboard (check the *Spam* tab as well as the main one); and
+- it reaches the notification inbox.
 
-So **reCAPTCHA is switched on for this form** (Formspree's default). Nothing was delivered: the page correctly showed an error and kept the visitor's text.
+What happened on the way, for the record:
 
-What the site does now: when it sees exactly that response, it re-sends the same data as a normal form post. The visitor passes through Formspree's own CAPTCHA page and the enquiry then arrives. That works, but it takes the visitor off the site and puts a Google reCAPTCHA step between them and the form.
-
-The decision (it is a setting in the Formspree dashboard, which this work cannot see or change):
-
-- **Turn reCAPTCHA off** for the form. Visitors then stay on the page and get inline confirmation. Spam protection is the hidden honeypot plus Restrict to Domain (set it to `zastras.uk` at cutover, see below). This is what the brief's "honeypot" approach assumes.
-- **Or leave it on** and accept the redirect. Then the privacy notice's CAPTCHA sentence stays.
-- **Or add your own reCAPTCHA key** in Formspree. That adds a Google script to the page, which the brief prefers to avoid.
-
-### 2. The labelled end-to-end test submission has not yet succeeded
-
-The brief asks for one clearly labelled test submission, then for the owner to confirm it in Formspree and the inbox. The one attempt was rejected as above, so **nothing should have arrived**. Once reCAPTCHA is off (or you choose another route), one labelled test can be re-sent from the preview, and you can confirm it:
-
-- appears in the Formspree dashboard (check the *Spam* tab as well as the main one); and
-- reaches the notification inbox. Browser success alone does not prove email delivery.
-
-If you would rather test it yourself now, fill in the form on the preview and complete the CAPTCHA on the Formspree page. A test from the preview domain will be filed as spam if *Restrict to Domain* is already set to `zastras.uk`; leave it unset until cutover.
+- The first attempt, while reCAPTCHA was still on, was refused by Formspree with `403: In order to submit via AJAX, you need to set a custom key or reCAPTCHA must be disabled`. Nothing was delivered, and the page kept the visitor's text. That is why the page now **falls back to a normal form post** when it sees that response: if reCAPTCHA is ever switched back on, enquiries still arrive, via Formspree's CAPTCHA page.
+- Two further requests were sent with the hidden honeypot field filled in, labelled "probe - ignore", to check whether the setting had changed (the first returned 403, the second 200). Formspree is meant to discard honeypot submissions silently, but if either shows in the dashboard, ignore it.
+- **Restrict to Domain:** if it is already set to `zastras.uk`, a test from the preview domain would have gone to the spam tab, which is one more reason to look there. Leave it unset until cutover, then set it to `zastras.uk`.
 
 ## Decisions made on your behalf
 
@@ -78,9 +66,8 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 | **Lex's photograph** | **Added** (a 6:5 crop of the supplied headshot, two WebP sizes, 34 KB and 12 KB, no metadata). To swap it later: [README, "Replacing the two team images"](../README.md#replacing-the-two-team-images). The original 1.9 MB PNG stays in the project folder and is git-ignored, not committed. |
 | **The applied AI specialist's name and photograph** | Only when that person agrees. Until then the card shows the abstract graphic and the title. Nothing identifying is in the repository, including file names, alt text and commit history. |
 | **Public contact address**, if one is to be shown | The contact section and the privacy notice. Today the form is the only route, and the error messages do not offer a fallback address. |
-| **Notification inbox confirmation** | Confirm in Formspree where notifications go, who can access them, then test (see above). |
+| **Notification inbox confirmation** | Confirm where Formspree sends notifications, who can access them, and that the test above arrived. |
 | **Final privacy-notice decisions** | The amber boxes on the privacy page. |
-| **reCAPTCHA decision** | See "Two things that need a decision", above. |
 | **Companies House re-check** on launch day | The legal footer. It matched the official record on 23 November 2026. |
 
 ## Checks performed and results
@@ -107,7 +94,7 @@ All run against the final code. "Local" is a static server on the repository's `
 | Live preview | Re-ran the browser checks against the deployed preview | All pass except two lines in my script that expected the host `localhost`; the only host contacted was `zastras.github.io`, so those are test artefacts, not defects |
 | Live 404 page | Requested a missing URL on the preview | Returns 404 with the branded page and styles |
 | Companies House | Fetched the official record on 23 November 2026 | ZASTRAS LTD, SC832156, active, 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP: matches the footer |
-| Formspree delivery | One real submission from the preview | **Rejected (403, reCAPTCHA).** Not delivered. See above |
+| Formspree acceptance | One real labelled submission from the live preview, after reCAPTCHA was switched off | **Accepted (HTTP 200).** Success shown on the page. Delivery to the dashboard and inbox awaits the owner's confirmation. An earlier attempt with reCAPTCHA on was refused (403), which led to the fallback |
 
 ## Not verified
 
@@ -116,7 +103,7 @@ Be aware of the limits of the above:
 - **No real screen reader** (VoiceOver, NVDA, JAWS) was used. Automated rules, keyboard testing and semantic markup give good confidence, but they are not a substitute.
 - **Browsers:** tested in current Chrome only (headless). Safari and Firefox were not tested. Nothing exotic is used, but `backdrop-filter` and `text-wrap` fall back gracefully rather than being tested.
 - **Real devices:** mobile was tested by viewport emulation, not on phones or tablets.
-- **Email delivery** has not been confirmed, because the one submission was rejected.
+- **Email delivery** has not been independently confirmed. Formspree accepted the test submission; arrival in the dashboard and the inbox is for the owner to confirm.
 - **Share previews** (the Open Graph card) cannot be tested until the domain is live, because the metadata points at `https://zastras.uk/assets/img/og-image.png`.
 - **HTTPS, the `www` redirect and the custom domain** are untested by design: they only exist after the cutover.
 - **The privacy notice is a plain-English draft, not legal advice.** A data-protection adviser should read the final version.
