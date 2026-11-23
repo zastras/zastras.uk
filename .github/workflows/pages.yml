@@ -22,13 +22,29 @@ jobs:
       - name: Structure, links, metadata, form and legal-text checks
         run: node scripts/check-site.mjs
 
-  deploy:
-    name: Deploy to GitHub Pages
+  # Building the artifact and deploying it are separate jobs on purpose. When both ran in one job,
+  # deploy-pages asked for the artifact in the same second it was uploaded and sometimes found none
+  # ("Found 0 artifact(s)"). A job boundary leaves time for the artifact to register.
+  build:
+    name: Build Pages artifact
     needs: check
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
       pages: write
       id-token: write
     concurrency:
@@ -38,10 +54,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: site
       - id: deployment
         uses: actions/deploy-pages@v5
