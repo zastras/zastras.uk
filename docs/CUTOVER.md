@@ -40,7 +40,7 @@ This checklist covers: preparing the repository, verifying and configuring the d
 - **Email runs on Google.** The MX, SPF and DKIM records below carry it. They are not part of this change and must come out of it exactly as they went in. The Squarespace DNS Settings page shows a banner saying Google Workspace manages this domain and that changes could affect its functionality, which is why only the web records are touched. DNSSEC is off (no DS or DNSKEY records found on 23 November 2026), so there is no signing step to coordinate.
 - **Turn on two-factor authentication on the Squarespace account first.** The dashboard was prompting for it on 23 November 2026, and this account controls the domain, so it should not be left on a password alone. Squarespace also asks for the password or a 2FA code before it lets you add, edit or delete a record.
 - **DNS changes can take up to 24 hours to propagate**, according to GitHub's documentation, and every record currently has a 4-hour TTL (see Section B). Pick a time when a short interruption to the web page is acceptable. Email is unaffected because no mail record changes.
-- **There will be a certificate gap, and Squarespace has set HSTS on the apex.** Squarespace currently sends `Strict-Transport-Security: max-age=15552000` (180 days) for `zastras.uk` and `www.zastras.uk` (observed 23 November 2026, no `includeSubDomains`). GitHub can only issue the certificate for `zastras.uk` after the DNS check passes, which is after the records are switched. Until then, anyone who has visited the Squarespace page in that browser and reaches the new servers gets a hard certificate error with no click-through, and everyone else gets a warning. Plan for it: do the switch at a quiet time, save the repository custom domain (Section C) immediately before the switch so GitHub can begin its DNS check and certificate request as early as possible, and treat the gap as the period from the DNS switch until **Enforce HTTPS** becomes tickable (usually minutes, at most about a day).
+- **There will be a certificate gap, and Squarespace has set HSTS on the apex.** Squarespace currently sends `Strict-Transport-Security: max-age=15552000` (180 days) for `zastras.uk` and `www.zastras.uk` (observed 23 November 2026, no `includeSubDomains`). GitHub can only issue the certificate for `zastras.uk` after the DNS check passes, which is after the records are switched. Until then, anyone who has visited the Squarespace page in that browser and reaches the new servers gets a hard certificate error with no click-through, and everyone else gets a warning. Plan for it: do the switch at a quiet time, save the repository custom domain (Section C) immediately before the switch so GitHub can begin its DNS check and certificate request as early as possible, and treat the gap as the period from the DNS switch until **Enforce HTTPS** becomes tickable (usually minutes, at most about a day). **What actually happened:** the records were switched on the evening of 23 November 2026 *before* the custom domain was saved, so until it was saved (about 08:25 UTC on 24 November) `http://zastras.uk` returned GitHub's 404 page and `https://zastras.uk` failed with a certificate mismatch (GitHub's generic `*.github.io` certificate). In that case the gap lasted until the custom domain was saved; the certificate followed within about a minute. Save the custom domain first.
 - **No `CNAME` file is needed.** The site publishes through a GitHub Actions workflow, and GitHub ignores any `CNAME` file in that case.
 - Nothing here needs a secret to be committed to the repository.
 
@@ -84,7 +84,7 @@ Take a record of everything, so you can restore it exactly.
   ```
 
 - [x] Note the **TTL** of each record. On 23 November 2026 the DNS panel showed **4 hrs** for every record except `_domainconnect` (1 hr), and the authoritative name server (`ns-cloud-e1.googledomains.com`) served **14400 seconds (4 hours)** for all of them, `_domainconnect` included. Re-read them from the panel on the day.
-- [x] **Give the new records a short TTL, rather than lowering the old ones.** The Squarespace A and `www` records are listed in a separate *Squarespace Defaults* block (see Section D), and it is not confirmed that their TTL can be edited. So create the new GitHub records with a TTL of **300 seconds (5 minutes)**. That makes a rollback quick for anyone who has already cached the new answers. Visitors who cached the old Squarespace answer keep it for up to 4 hours after the switch; that is harmless, because they simply keep seeing the holding page until it expires. Records restored during a rollback come back at 4 hours.
+- [x] **Give the new records a short TTL, rather than lowering the old ones.** The Squarespace A and `www` records are listed in a separate *Squarespace Defaults* block (see Section D), and it is not confirmed that their TTL can be edited. So create the new GitHub records with a TTL of **300 seconds (5 minutes)**. That makes a rollback quick for anyone who has already cached the new answers. Visitors who cached the old Squarespace answer keep it for up to 4 hours after the switch; that is harmless, because they simply keep seeing the holding page until it expires. Records restored during a rollback come back at 4 hours. **Result on 23 November 2026:** the new records showed *5 mins* in the panel, and 1.1.1.1, 8.8.8.8 and 9.9.9.9 already returned the GitHub addresses at the first check, while a local resolver was still returning the old Squarespace address with most of its 4-hour TTL left. Check with a public resolver (Section D), not your own.
 
 **What was observed on 23 November 2026** (by `dig`; confirm against the DNS panel, which is the source of truth):
 
@@ -106,10 +106,10 @@ Any record in the panel that is not in this table must also be kept unless you c
 
 ## C. Verify the domain in GitHub and configure the Pages custom domain
 
-Verifying first stops anyone else from claiming the domain for their own Pages site. Do this in one sitting with Section D.
+Verifying first stops anyone else from claiming the domain for their own Pages site. Do this in one sitting with Section D, and **finish this section, including saving the custom domain, before changing any record in Section D** (see the certificate-gap note above). Once it is saved, `gh api repos/zastras/zastras.uk/pages --jq .protected_domain_state` should read `verified`.
 
 - [x] **Verify the domain** for the `zastras` organisation: *github.com, zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`. GitHub shows a TXT record to add, of the form `_github-pages-challenge-zastras.zastras.uk` with a value GitHub gives you. Add exactly that TXT record in Squarespace DNS (this is additive and does not affect the website or email): *Squarespace, Domains, zastras.uk, DNS, DNS Settings, Custom records, Add record*, Type `TXT`, Name `_github-pages-challenge-zastras` (the name only, without `.zastras.uk`), Data the value GitHub shows, pasted as given with no extra quotation marks. Do not touch the existing `@` SPF record. Wait for it to resolve (`dig +short _github-pages-challenge-zastras.zastras.uk TXT`), then in GitHub use the kebab menu next to the domain, *Continue verifying*, then *Verify*. Keep the TXT record afterwards: GitHub re-checks it periodically. *Done: the Pages API reports the domain state as `verified` (24 November 2026).*
-- [x] In the repository, *Settings, Pages, Custom domain*: enter **`zastras.uk`** (the apex) and save. Using the apex as the custom domain means GitHub redirects `www.zastras.uk` to `zastras.uk` once both DNS records exist. *Done on 24 November 2026.*
+- [x] In the repository, *Settings, Pages, Custom domain*: enter **`zastras.uk`** (the apex) and save. Using the apex as the custom domain means GitHub redirects `www.zastras.uk` to `zastras.uk` once both DNS records exist. Saving it also switches **Enforce HTTPS** back off (observed on 24 November 2026), so it has to be ticked again in Section E. *Done on 24 November 2026, after Section D rather than before it.*
 - [x] Expect a "DNS check unsuccessful" message at this point. That is normal until Section D is done. *It cleared once Section D was done.*
 
 ## D. Switch the web records
@@ -122,7 +122,7 @@ In Squarespace DNS:
   - **Custom records:** `MX @ 1 smtp.google.com`, `TXT @` (SPF) and `TXT google._domainkey` (DKIM). Leave all three. New records are added here with *Add record*.
 
   The panel shows CNAME data without a trailing dot, so enter the `www` target as `zastras.github.io` (no dot).
-- [x] **Remove** the two *Squarespace Defaults* records (the `@` A record and the `www` CNAME). Squarespace's help says removing the defaults disconnects the domain from the Squarespace site, which is the intent here (it also stops any Squarespace Pay Links on the domain, so confirm there are none). It is **not confirmed** whether the panel lets you delete these two rows individually or only through the preset; if the buttons are not obvious, stop and look at the *Website* tab of the domain before improvising. A `www` CNAME cannot coexist with other `www` records, so delete the old one before adding the new one. Leave every other record alone. *Done: the apex A set is exactly the four GitHub addresses and `www` is the new CNAME.*
+- [x] **Remove** the two *Squarespace Defaults* records (the `@` A record and the `www` CNAME). Squarespace's help says removing the defaults disconnects the domain from the Squarespace site, which is the intent here (it also stops any Squarespace Pay Links on the domain, so confirm there are none). On 23 November 2026 the *Squarespace Defaults* block could be removed, and afterwards the panel listed only the *Squarespace Domain Connect* preset and the custom records. If the controls are not obvious, stop and look at the *Website* tab of the domain before improvising. A `www` CNAME cannot coexist with other `www` records, so delete the old one before adding the new one. Leave every other record alone. *Done: the apex A set is exactly the four GitHub addresses and `www` is the new CNAME.*
 - [x] **Add four A records** for `@`:
 
   | Type | Host | Value |
@@ -150,12 +150,12 @@ In Squarespace DNS:
   The target is the organisation's Pages domain **without the repository name**, and not the `*.pages.github.io` address shown in the settings. Never point `www` at the apex.
 - [x] On each of the nine new records, set the **TTL to 300 seconds** if the form allows it (the default for custom records is 4 hours). Leave *Priority* as it is (not used for A, AAAA or CNAME). *Done: all nine show 300 on 24 November 2026.*
 - [x] Do **not** add wildcard (`*`) records. GitHub advises against them because they invite domain takeover. *Verified: a random subdomain does not resolve.*
-- [x] Confirm the records resolve (allow time to propagate):
+- [x] Confirm the records resolve (allow time to propagate; ask a public resolver, because your own may hold the old answer for up to the old 4-hour TTL):
 
   ```bash
-  dig +noall +answer zastras.uk A        # four 185.199.10x.153 addresses
-  dig +noall +answer zastras.uk AAAA     # four 2606:50c0:800x::153 addresses
-  dig +noall +answer www.zastras.uk      # zastras.github.io. then GitHub addresses
+  dig +noall +answer @1.1.1.1 zastras.uk A        # four 185.199.10x.153 addresses
+  dig +noall +answer @1.1.1.1 zastras.uk AAAA     # four 2606:50c0:800x::153 addresses
+  dig +noall +answer @1.1.1.1 www.zastras.uk      # zastras.github.io. then GitHub addresses
   ```
 
 - [x] Run the verifier, which checks the web records, the preserved mail records, HTTPS, redirects and the pages in one go (re-run until it is clean; DNS can lag for up to a TTL): *Run on 24 November 2026: no problems.*
@@ -168,8 +168,8 @@ In Squarespace DNS:
 
 ## E. Enable and check HTTPS
 
-- [x] In *Settings, Pages*, wait for the green **DNS check successful** message. GitHub then provisions a certificate; this can take from minutes up to about a day. *Done: certificate approved for `zastras.uk` and `www.zastras.uk`, expires 22 February 2027.*
-- [x] Tick **Enforce HTTPS** as soon as it becomes available. *Done on 24 November 2026.*
+- [x] In *Settings, Pages*, wait for the green **DNS check successful** message. GitHub then provisions a certificate; this can take from minutes up to about a day (on 24 November 2026 it took about a minute after the custom domain was saved). The same state is readable from a terminal: `gh api repos/zastras/zastras.uk/pages --jq .https_certificate.state` moves from `authorization_pending` to `approved`. *Done: certificate approved for `zastras.uk` and `www.zastras.uk`, expires 22 February 2027.*
+- [x] Tick **Enforce HTTPS** as soon as it becomes available (it is off after the custom domain is saved). The equivalent from a terminal is `gh api -X PUT repos/zastras/zastras.uk/pages -F https_enforced=true`. *Done on 24 November 2026.*
 - [x] Check the certificate: open `https://zastras.uk` and confirm the padlock, the certificate covers `zastras.uk`, and there are no mixed-content warnings (the page requests nothing from other hosts, so there should be none). *Verified from outside: the page answers over HTTPS with a valid certificate and requests nothing from other hosts.*
 - [x] `http://zastras.uk` and `http://www.zastras.uk` both redirect to `https://zastras.uk`. *Verified (301).*
 
