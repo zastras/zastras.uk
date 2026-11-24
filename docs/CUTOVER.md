@@ -1,6 +1,6 @@
 # Production cutover checklist: zastras.uk
 
-## Status on 24 November 2026: the domain is switched and live; indexing is still off
+## Status on 24 November 2026: the domain is switched and live; indexing is switched on by the publication pull request
 
 The owner approved the cutover on 23 November 2026 and made the DNS changes himself in Squarespace that evening. On 24 November 2026, at his explicit yes, the Pages custom domain was saved and Enforce HTTPS turned on through the GitHub API. Sections B to E are done and were checked from outside on 24 November 2026 with `node scripts/verify-cutover.mjs --after` ("No problems"), the Pages API and `dig`:
 
@@ -14,8 +14,8 @@ The owner approved the cutover on 23 November 2026 and made the DNS changes hims
 1. Contact form on the live domain: send a labelled test, set Formspree *Restrict to Domain* to `zastras.uk` (no `www`), send a second one (Section F).
 2. A real inbound and outbound email test on the domain (Sections D and F).
 3. Cookie and third-party re-audit on the live domain (Section F).
-4. The privacy items that gate publication: [To-do.md](../To-do.md) lists them (deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked on the day, Companies House re-check, adviser read, "Last updated" date, draft banner removed).
-5. Only then Section G: remove `noindex`, so search engines can index the site.
+4. The privacy items that were listed as gating publication, which the owner still has to close: [To-do.md](../To-do.md) lists them (deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked, adviser read, the legitimate-interests assessment signed, two-factor authentication on Formspree and the mailbox). Done in the publication pull request: "Last updated" set, draft banner removed, Companies House re-checked (24 November 2026).
+5. Section G: the `noindex` tags are removed by the publication pull request, so search engines can index the site once it is merged and deployed. The checks after the deployment are listed there.
 6. Turn on two-factor authentication on the Squarespace account (not set up as of 24 November 2026).
 
 The sections below are kept as the record of what was done, and for rollback. Wording written before the switch ("will", "before you begin") is unchanged.
@@ -51,18 +51,18 @@ This checklist covers: preparing the repository, verifying and configuring the d
 - [x] **Design** approved by the owner on the preview, at desktop and mobile widths (covered by the owner's approval of the cutover on 23 November 2026).
 - [x] **Copy** approved, including the three additions made during the build that were not in the brief (see [REVIEW.md](REVIEW.md), "Decisions made on your behalf"). Three further passages were removed at the owner's request on 24 November 2026.
 - [x] **Team presentation** approved: Lex's photograph accepted; the applied AI specialist's card keeps the abstract graphic and the title, with no name or photograph until that person agrees.
-- [ ] **Privacy notice** approved. Done on 24 November 2026: the hosting section and cookie wording approved and all amber review boxes removed; retention, access and the transfer safeguard written in from the owner's answers of 23 November 2026. Still open: the draft banner removed, the "Last updated" date set, the 12-month deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked on the day (it read Active with the UK Extension on 23 November 2026), and a data-protection adviser has read the final text. See [To-do.md](../To-do.md).
+- [ ] **Privacy notice** approved. Done on 24 November 2026: the hosting section and cookie wording approved and all amber review boxes removed; retention, access and the transfer safeguard written in from the owner's answers of 23 November 2026; the draft banner removed and "Last updated" set to 24 November 2026 in the publication pull request. Still open, and owner-only: the 12-month deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked (it read Active with the UK Extension on 23 November 2026), and a data-protection adviser reading the final text. See [To-do.md](../To-do.md).
 - [x] **ICO data protection fee:** the company is on the ICO register (checked on the register on 23 November 2026; details in the internal compliance record). Nothing on the site claims ICO registration. Diary the renewal.
 - [ ] **Formspree** confirmed by the owner: the notification inbox and who has access (the Director only, confirmed 23 November 2026; two-factor authentication still to check). Whether Formspree acts as a processor and offers a data processing agreement is a loose end, not a blocker. reCAPTCHA is currently off (see README). A labelled test sent from the preview on 23 November 2026 was confirmed by the owner in both the Formspree dashboard and the notification inbox (domain restriction was off at the time).
-- [ ] **Companies House** record re-checked on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>. Name, number and registered office must match the legal footer exactly. (They matched on 23 November 2026.)
+- [x] **Companies House** record re-checked on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>. Name, number and registered office must match the legal footer exactly. *Matched on 23 and again on 24 November 2026 (ZASTRAS LTD, Active, 48 West George Street, 2nd Floor, Glasgow, G2 1BP).*
 - [x] **Public address:** the registered office appears in the footer's legal line only, with no wording that invites visits. No other address is shown.
-- [ ] **Publication pull request merged** to `main`, containing the open privacy items above (draft banner removed, date set). Then run:
+- [ ] **Publication pull request merged** to `main`, containing the draft banner removal, the "Last updated" date and the removal of the `noindex` tags. The check is now always strict (the `--production` flag is gone), so this must pass with no failures before merging:
 
   ```bash
-  node scripts/check-site.mjs --production
+  node scripts/check-site.mjs
+  node --test scripts/check-site.test.mjs
   ```
 
-  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. The retainer terms page was approved and dated on 24 November 2026, so it adds nothing to the list beyond its own `noindex` tag and marker comment. The check therefore fails on eight items: the three `noindex` tags, the three `PREVIEW-NOINDEX` comments, and the privacy page's draft banner and `[publication date]` placeholder.
 - [x] The latest run of the *Check and deploy site* workflow on `main` is green and `https://zastras.uk/` shows the approved content (checked 24 November 2026).
 
 ## B. Inventory the existing DNS (before changing anything)
@@ -182,22 +182,22 @@ Use a private window or `curl`, so you see what a new visitor sees.
 - [ ] **Internal links:** every item in the header and footer navigation scrolls to the right section; the privacy link works from the home page and the privacy page links back; the "Discuss a workflow" and "How we work" buttons work. Run `node scripts/check-site.mjs --external` for a mechanical pass.
 - [ ] **Images and fonts:** nothing 404s (browser developer tools, Network tab); the logo, both team images and the fonts load; `https://zastras.uk/favicon.ico` and `https://zastras.uk/assets/img/og-image.png` return 200. *Partly checked: the verifier fetched the stylesheet, script, font, the team images, `favicon.ico` and `og-image.png` and all returned 200. The browser Network-tab pass is still to do.*
 - [ ] **Metadata:** view source on each page: titles, descriptions, canonical URLs (`https://zastras.uk/`, `https://zastras.uk/privacy/` and `https://zastras.uk/retainer/`) and Open Graph tags are correct. Paste the URL into the LinkedIn Post Inspector or a messaging app to confirm the share card shows the Open Graph image.
-- [ ] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the three pages on `zastras.uk`. *Verified on 24 November 2026 while two pages were published (both files loaded and the sitemap listed both); check again once the retainer page has deployed.*
+- [ ] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the five public pages on `zastras.uk`. *Both loaded on 24 November 2026 (three pages listed then); `node scripts/verify-live.mjs` checks every sitemap URL after each deployment.*
 - [ ] **Contact form, on the live domain:** send one clearly labelled test enquiry. Confirm it appears in the Formspree dashboard **and** arrives in the notification inbox. Then, in Formspree, set **Restrict to Domain** to `zastras.uk` (no `www`) and send a second labelled test to confirm it still arrives and is not in the spam tab.
 - [ ] **Privacy notice** reads correctly on the live site and its legal footer matches Companies House.
 - [ ] **Costs and retainer terms:** the prices in the home page costs section match the approved figures, and the "retainer terms" link there opens `https://zastras.uk/retainer/`.
 - [ ] **Email:** repeat the inbound and outbound test emails from Section D.
-- [ ] **Cookies and third parties:** developer tools show no cookies and requests only to `zastras.uk` (plus `formspree.io` when the form is submitted).
+- [x] **Cookies and third parties:** developer tools show no cookies and requests only to `zastras.uk` (plus `formspree.io` when the form is submitted). *Checked on 24 November 2026 with a scripted Chrome session on the live home, privacy and retainer pages (mobile and desktop): five or six requests each, all to `zastras.uk`, no cookies, no console errors. The Formspree submission itself is part of the test above.*
 
 ## G. Allow search indexing (last step)
 
-Until now every page carries `<meta name="robots" content="noindex, nofollow">`, so the site has been verified live without being indexed.
+Until the publication pull request, every page carried `<meta name="robots" content="noindex, nofollow">`, so the site could be verified live without being indexed.
 
-- [ ] Open a pull request that **deletes the three `PREVIEW-NOINDEX` blocks** (the comment and the `noindex` meta tag) in `site/index.html`, `site/privacy/index.html` and `site/retainer/index.html`.
-- [ ] `node scripts/check-site.mjs --production` now passes with no failures (and no placeholder warning).
-- [ ] After the deploy, `node scripts/verify-cutover.mjs --after --indexable` reports no problems.
-- [ ] Merge; wait for the deploy; confirm `curl -s https://zastras.uk | grep -ci noindex` prints `0`, and the same for `/privacy/` and `/retainer/`.
-- [ ] Optional: add `https://zastras.uk` to Google Search Console and submit `https://zastras.uk/sitemap.xml`.
+- [x] The publication pull request **deletes the three `PREVIEW-NOINDEX` blocks** (the comment and the `noindex` meta tag) in `site/index.html`, `site/privacy/index.html` and `site/retainer/index.html`, and removes the draft banner from the privacy notice. `site/404.html` keeps its `noindex` on purpose: it is served, with an HTTP 404, only for addresses that do not exist.
+- [x] `node scripts/check-site.mjs` passes with no failures. It now fails if any public page gains `noindex`, `none`, `nofollow` or `nosnippet`, a draft banner or a placeholder, and the Pages workflow runs it, and `node --test scripts/check-site.test.mjs`, on every pull request.
+- [ ] After the merge and deployment: `node scripts/verify-live.mjs` passes (the workflow's *Verify the live site* job runs it; it checks status codes, `X-Robots-Tag` headers, robots meta tags, canonical URLs, redirects and the 404 for every URL in the live sitemap), and `node scripts/verify-cutover.mjs --after --indexable` reports no problems.
+- [ ] `curl -sI https://zastras.uk/ | grep -i x-robots` prints nothing, and `curl -s https://zastras.uk/ | grep -ci noindex` prints `0`, and the same for `/privacy/`, `/retainer/`, `/process-review/` and `/one-workflow-pilot/`.
+- [ ] Owner: add `https://zastras.uk/` to Google Search Console (a DNS verification record is preferable to a file or tag in `site/`) and submit `https://zastras.uk/sitemap.xml`. This repository does not do it.
 
 ## Rollback
 

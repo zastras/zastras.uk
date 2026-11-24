@@ -663,6 +663,8 @@ a:hover { text-decoration-thickness: 0.14em; }
 }
 .service h3 { font-size: 1.4rem; letter-spacing: -0.02em; }
 .service p { color: var(--mist); font-size: var(--fs-small); line-height: 1.6; }
+.service .service__more a { color: var(--blue-300); font-weight: 600; }
+.service .service__more a:hover { color: var(--white); }
 .service__out {
   margin-top: auto;
   padding-top: 1.1rem;

@@ -82,7 +82,7 @@ if (AFTER) {
     const html = await home.text();
     home.status === 200 ? ok(`https://${DOMAIN}/ returns 200`) : bad(`https://${DOMAIN}/ returned ${home.status}`);
     /Squarespace/i.test(home.headers.get("server") || "") ? bad("still served by Squarespace") : ok("not served by Squarespace");
-    /<title>Zastras Accelerate/.test(html) ? ok("new site title present") : bad("new site not found at the apex (is this still the old page?)");
+    /<title>[^<]*Zastras Accelerate/.test(html) ? ok("new site title present") : bad("new site not found at the apex (is this still the old page?)");
     html.includes(LEGAL) ? ok("legal footer present") : bad("legal footer missing");
     /<link rel="canonical" href="https:\/\/zastras\.uk\/">/.test(html) ? ok("canonical is https://zastras.uk/") : bad("canonical wrong");
     const noindex = /<meta name="robots"[^>]*noindex/i.test(html);

@@ -1,12 +1,12 @@
 # Review notes
 
-For the owner's review of the first version of the site. Written 23 November 2026, updated 24 November 2026. The site has since gone live at `zastras.uk` (DNS switched on 23 November 2026, HTTPS enforced on 24 November 2026); it is still marked `noindex`. See [CUTOVER.md](CUTOVER.md), "Status on 24 November 2026". The checks below were run against the preview before the switch.
+For the owner's review of the first version of the site. Written 23 November 2026, updated 24 November 2026. The site has since gone live at `zastras.uk` (DNS switched on 23 November 2026, HTTPS enforced on 24 November 2026); it was marked `noindex` until the publication pull request of 24 November 2026 (see "SEO and indexing review" below). See [CUTOVER.md](CUTOVER.md), "Status on 24 November 2026". The checks below were run against the preview before the switch.
 
 ## What to look at
 
 | What | Where |
 |---|---|
-| Live site (marked `noindex`) | https://zastras.uk/ and https://zastras.uk/privacy/ (the old `zastras.github.io` preview address redirects to these) |
+| Live site | https://zastras.uk/, https://zastras.uk/process-review/, https://zastras.uk/one-workflow-pilot/, https://zastras.uk/privacy/ and https://zastras.uk/retainer/ (the old `zastras.github.io` preview address redirects to these) |
 | Desktop, full page | [previews/desktop-home.jpg](previews/desktop-home.jpg), [previews/desktop-privacy.jpg](previews/desktop-privacy.jpg) |
 | Mobile, key screens and the open menu | [previews/mobile-overview.jpg](previews/mobile-overview.jpg) |
 | The reasoning behind the visual identity | [BRAND.md](BRAND.md) |
@@ -80,7 +80,7 @@ All run against the final code. "Local" is a static server on the repository's `
 |---|---|---|
 | Structure, links, anchors, metadata, form endpoint, labels, legal footer, sitemap, credentials | `node scripts/check-site.mjs` (also runs in CI) | Pass |
 | Does the check script actually catch faults? | Injected seven faults into a copy (broken anchor, missing file, missing alt, wrong form endpoint, altered legal text, skipped heading level, root-relative path) | All caught |
-| Launch gate | `node scripts/check-site.mjs --production` | Fails, as designed, until noindex, owner-decision boxes, draft banner and placeholders are gone |
+| Launch gate | `node scripts/check-site.mjs` (strict since the publication pull request; the old `--production` flag is gone) | Failed, as designed, until noindex, owner-decision boxes, draft banner and placeholders were gone; passes now |
 | External links | `--external` | 3 of 3 return 200 (Formspree privacy policy, GitHub privacy statement, ICO complaints page) |
 | Horizontal overflow | Chrome at 320, 375, 390, 768, 1024, 1440 px, on all three pages | None. The 320 px case approximates 400% zoom on a 1280 px screen |
 | Automated accessibility | axe-core with WCAG 2.0, 2.1, 2.2 A and AA rules plus best practice, on home and privacy at 1440 and 390 px, and the 404 page | 0 violations. Colour contrast could not be resolved by axe over gradients, so it was measured separately (next row) |
@@ -98,9 +98,48 @@ All run against the final code. "Local" is a static server on the repository's `
 | Companies House | Fetched the official record on 23 November 2026 | ZASTRAS LTD, SC832156, active, 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP: matches the footer |
 | Formspree end to end | Real labelled submission from the live preview, after reCAPTCHA and the domain restriction were switched off | **Accepted (HTTP 200), shown on the page, present in the dashboard and received in the inbox (confirmed by the owner).** Earlier attempts: refused (403) with reCAPTCHA on, then filed as spam by the domain restriction |
 
+## SEO and indexing review (24 November 2026)
+
+Prepared on the branch that removes `noindex`. Nothing here is a ranking promise: it records what was changed, what was measured and what could not be checked.
+
+**What the live site did before the change** (checked with `curl` and `scripts/verify-live.mjs --once` against `https://zastras.uk`, 22:20 to 22:25 UTC):
+
+| Request | Result |
+|---|---|
+| `http://zastras.uk/`, `http://www.zastras.uk/`, `https://www.zastras.uk/`, `https://zastras.github.io/zastras.uk/` | One 301 each straight to `https://zastras.uk/` (no chains) |
+| `/`, `/privacy/`, `/retainer/` | 200, `<meta name="robots" content="noindex, nofollow">` in each, no `X-Robots-Tag` header |
+| `/privacy`, `/retainer` (no slash) | One 301 to the slash URL |
+| `/index.html` | 200, a duplicate of `/` (nothing links to it, and the canonical names `/`) |
+| `/robots.txt`, `/sitemap.xml` | 200; robots allowed everything and named the sitemap, which listed three pages |
+| a missing URL, with and without a slash | Real HTTP 404, branded page, `noindex` |
+| Cache | `Cache-Control: max-age=600` on pages; GitHub Pages sends no `X-Robots-Tag` and cannot be made to |
+
+**What was found in the source:** `noindex, nofollow` plus a `PREVIEW-NOINDEX` comment on the home, privacy and retainer pages; a draft banner and `[publication date]` on the privacy page. No other blocking directive anywhere: no `X-Robots-Tag` mention, no environment-dependent rules, no `Disallow` lines, and nothing blocking CSS, JavaScript or images. The 404 page's `noindex` is intentional and stays. The "Edinburgh and Glasgow" wording described in the brief no longer exists: the owner removed every place name on 24 November 2026 (pull request 16), so the geographic inconsistency was already resolved by removing geography. It was not reintroduced.
+
+**What changed:** see the pull request. In short: indexing tags and the draft banner removed, "Last updated" set; home page title, description and structured data rewritten (`ProfessionalService` replaced by `Organization` plus `WebSite`, because the registered office is not a public premises); two new service pages with their own titles, descriptions, `Service` structured data, sitemap entries and links from the home page, footers and price cards; `robots.txt` comment and sitemap updated; strict checks, a test file for the checks and a post-deployment live check added to CI.
+
+**Measurements** (lab, not field data). Headless Chrome driven over the DevTools protocol, cache disabled. *Mobile:* 390 x 844 at 2x, CPU slowed 4x, network 1.6 Mbit/s down with 150 ms round trip. *Desktop:* 1350 x 940, no throttling.
+
+| Pages | Profile | Largest Contentful Paint | Layout shift (CLS) | Requests | Transferred | Horizontal overflow | Cookies | Hosts contacted | Console errors |
+|---|---|---|---|---|---|---|---|---|---|
+| Current live site: `/`, `/privacy/`, `/retainer/` (before) | mobile | 0.58 to 0.69 s | 0 | 5 to 6 | 69 to 75 KB (gzip) | none | 0 | `zastras.uk` only | 0 |
+| Same | desktop | 0.08 to 0.11 s | 0 | 5 to 6 | 69 to 74 KB | none | 0 | `zastras.uk` only | 0 |
+| This branch served locally, all five public pages | mobile | 0.72 to 0.80 s | 0 | 5 to 6 | 113 to 141 KB (not compressed by the local server) | none | 0 | the local server only | 0 |
+| Same | desktop | 0.05 to 0.11 s | 0 | 5 to 6 | 113 to 140 KB (not compressed) | none | 0 | the local server only | 0 |
+
+The mobile figures are slightly higher locally than live because the local server does not compress responses. Nothing here needed fixing: the page has no render-blocking third-party resource, the main font is preloaded and self-hosted with `font-display: swap`, the only photograph is below the fold, lazy-loaded, sized and offered at two widths, and the largest paint is the heading or the opening paragraph. Lighthouse and PageSpeed Insights were not available: the PageSpeed Insights API returned its daily-quota error (429) for an unauthenticated call, and Lighthouse is not installed. There is no real-user (CrUX) data yet for a site this new. Screenshots at 390 px taken with `--window-size` were clipped by headless Chrome's minimum window width; the layout check above used device emulation and found no overflow.
+
+**Not verified** (and why):
+
+- **Google's Rich Results Test and the Schema Markup Validator were not run.** The built-in browser refused both addresses. The JSON-LD was checked only by the repository's parser and rules (valid JSON, schema.org context, approved types, no address, hours, rating, review or telephone, URLs on the site, `Service` text present on the page). Run Google's test on the three URLs after deployment.
+- **Whether Google will index or rank the pages** cannot be known from here; indexing is requested from Search Console, which this work does not touch.
+- **Formspree's Data Privacy Framework entry**: not re-checked (the earlier session was refused access to the site and was told not to route around it).
+- **The privacy notice's Formspree statements** (confirmation page sets a cookie and loads Google fonts; 12-month deletion) describe a third party's page and the owner's routine, not the deployed site, and were not re-tested.
+- **Contact form** was not submitted from the live domain, so the domain restriction and delivery are unchanged and unconfirmed since cutover.
+
 ## Not verified
 
-Be aware of the limits of the above:
+Be aware of the limits of the checks in the first table:
 
 - **No real screen reader** (VoiceOver, NVDA, JAWS) was used. Automated rules, keyboard testing and semantic markup give good confidence, but they are not a substitute.
 - **Browsers:** tested in current Chrome only (headless). Safari and Firefox were not tested. Nothing exotic is used, but `backdrop-filter` and `text-wrap` fall back gracefully rather than being tested.

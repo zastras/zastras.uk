@@ -1,6 +1,7 @@
 name: Check and deploy site
 
-# Pull requests run the checks only. Pushes to main (and manual runs) also publish ./site to GitHub Pages.
+# Pull requests run the checks only. Pushes to main (and manual runs) also publish ./site to GitHub Pages,
+# then ask the live site the indexing questions again, because a green source check does not prove what is served.
 on:
   push:
     branches: [main]
@@ -19,8 +20,13 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - name: Structure, links, metadata, form and legal-text checks
+      # Always strict: a public page that gains noindex, a draft banner or a placeholder fails here.
+      # Also checks canonical/sitemap agreement, duplicate metadata, JSON-LD, robots.txt and orphan pages.
+      - name: Site checks (structure, links, metadata, indexing, sitemap, structured data)
         run: node scripts/check-site.mjs
+      # Reintroduces each mistake in a copy of the site and expects the checks above to catch it.
+      - name: Tests for the site checks
+        run: node --test scripts/check-site.test.mjs
 
   # Building the artifact and deploying it are separate jobs on purpose. When both ran in one job,
   # deploy-pages asked for the artifact in the same second it was uploaded and sometimes found none
@@ -56,3 +62,18 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # Runs against https://zastras.uk after the deployment: status codes, redirects, response headers
+  # (X-Robots-Tag), robots meta tags, canonical URLs and the 404 behaviour of what is actually served.
+  # GitHub Pages caches for up to ten minutes, so the script retries for a few minutes before it fails.
+  verify:
+    name: Verify the live site
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Live indexing check
+        run: node scripts/verify-live.mjs
