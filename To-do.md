@@ -6,18 +6,16 @@ Action items for the Zastras Practical AI website. Updated 24 November 2026. The
 
 - [ ] the applied AI specialist's name and photo, only if they agree
 
-## Costs and retainer terms (drafted 24 November 2026)
+## Costs and retainer terms (retainer terms approved 24 November 2026)
 
-The home page now has a costs section with the three prices (process review £500–£750, one-workflow pilot £2,000–£5,000, ongoing care retainer £400–£900 a month), and `site/retainer/index.html` holds draft retainer terms. The retainer page is marked as a draft and carries an owner-review box that lists every figure and position that is a proposal. `node scripts/check-site.mjs --production` fails until that box, the draft banner and the publication date are gone, so the `noindex` removal cannot go ahead with it unfinished.
+The home page has a costs section with the three prices (process review £500–£750, one-workflow pilot £2,000–£5,000, ongoing care retainer £400–£900 a month), and `site/retainer/index.html` holds the retainer terms.
 
-- [ ] **Confirm the wording added around the prices** in the costs section: "Each stage is a separate decision", "A written fee before any work starts", "What sets the price" under each card, and "exclude VAT, which we add where it applies". The section does not say whether the first conversation is free. Add a line if it is.
-- [ ] **VAT.** Confirm the company's VAT status and that quoting prices excluding VAT is what you want. The wording is accurate either way.
-- [ ] **Work through the owner-review box on the retainer page** and confirm or change each position: notice and term, response times, payment and fee changes, the liability cap, third-party tool fees, ownership, handover, Scots law, change allowance, training.
-- [ ] **Decide where one-off staff training sits.** Service 03 on the home page is "Training and ongoing care", but only the retainer is priced. Say whether training is part of the pilot, part of the retainer, or quoted separately, and update both pages.
+- [x] **Retainer terms approved by the owner on 24 November 2026**, as drafted: notice and term, response times, payment and fee changes, the liability cap, third-party tool fees, ownership, handover, Scots law, and fees quoted excluding VAT. The draft banner and owner-review box are removed and the page is dated 24 November 2026.
+- [ ] **Confirm the wording added around the prices** in the costs section: "Each stage is a separate decision", "A written fee before any work starts" and "What sets the price" under each card. The section does not say whether the first conversation is free. Add a line if it is.
+- [ ] **Decide where one-off staff training sits.** The terms say training for new groups of staff is quoted separately. Still open: service 03 on the home page is "Training and ongoing care", but only the retainer is priced, so say whether the initial training is part of the pilot, part of the retainer, or quoted separately, and update both pages.
 - [ ] **Set the monthly change allowance** that goes with each price point (for example, hours of changes a month at £400, £650 and £900). The terms leave it to the order form because no figure exists yet.
-- [ ] **Draft the order form and a data processing agreement.** The terms rely on both. Under UK GDPR, handling personal data for a client needs a written contract with the client.
-- [ ] **Have a solicitor read the retainer terms** before publication, the liability, data protection and Scots-law parts most of all. Check the liability cap against any professional indemnity or cyber insurance the company holds; the page claims none.
-- [ ] On publication (with the `noindex` removal): set "Last updated" on the retainer page, delete its draft banner and owner-review box, then run `node scripts/check-site.mjs --production`.
+- [ ] **Draft the order form and a data processing agreement.** The published terms rely on both, so until they exist there is nothing to sign. Under UK GDPR, handling personal data for a client needs a written contract with the client.
+- [ ] **Have a solicitor read the retainer terms**, the liability, data protection and Scots-law parts most of all. These records show no legal review so far. Check the liability cap against any professional indemnity or cyber insurance the company holds; the page claims none.
 
 ## Privacy notice (live, but still marked draft; the review boxes are gone)
 
