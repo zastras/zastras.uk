@@ -56,6 +56,12 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 - Added beyond the supplied wording: a short website-hosting section (GitHub logs visitor IP addresses, per GitHub's documentation) and a sentence that the services necessarily receive technical details such as an IP address.
 - **ICO:** the company is on the ICO register (checked on the register on 23 November 2026). The notice does not claim it, because the fee is a company obligation and not a statement for visitors; only the complaint route is mentioned. See [To-do.md](../To-do.md).
 
+**Costs section and retainer terms** (drafted on 24 November 2026; the retainer page's owner-review box marks what is open)
+
+- **Prices are the owner's:** £500–£750 for the review, £2,000–£5,000 for a tightly scoped pilot, £400–£900 a month for a retainer "when monitoring and changes justify" one. The owner called them initial prices to test; the site calls them "current prices".
+- **Wording added beyond the supplied figures:** a "What sets the price" line under each card, a "How fees work" note (a written fee before work starts, each stage a separate decision, prices exclude VAT where it applies), and the claim that a retainer is suggested only when there is real ongoing work. The site does not say whether the first conversation is free.
+- **Retainer terms are a plain-English draft, not legal advice.** The requirements for having a retainer, what it includes and the commitments on each side are proposals, and so is every figure in them (notice, response times, payment, the liability cap, handover times). The owner-review box on the page lists them. They rely on an order form and a data processing agreement that do not exist yet. A solicitor should read the final wording.
+
 ## Remaining inputs
 
 | Input | Where it goes |

@@ -1,6 +1,6 @@
 # zastras.uk
 
-Source for the **Zastras Practical AI** website: a one-page site plus a privacy notice, built as plain HTML, CSS and a small amount of JavaScript. No framework, no build step, no analytics, no cookies.
+Source for the **Zastras Practical AI** website: a one-page site plus a privacy notice and retainer terms, built as plain HTML, CSS and a small amount of JavaScript. No framework, no build step, no analytics, no cookies.
 
 > **Status: live, not yet indexable.** `https://zastras.uk/` serves this site over HTTPS (DNS switched on 23 November 2026). Every page still carries a `noindex` tag until the privacy items in [To-do.md](To-do.md) are closed; removing it is the last step of [docs/CUTOVER.md](docs/CUTOVER.md). Nothing in this repository changes DNS.
 
@@ -44,6 +44,7 @@ mkdir -p /tmp/pages && ln -sfn "$PWD/site" /tmp/pages/zastras.uk && python3 -m h
 site/                      Everything that is published (this folder is the Pages artifact)
   index.html               The one-page site
   privacy/index.html       Privacy notice (draft, with owner-decision boxes)
+  retainer/index.html      Retainer terms (draft, with an owner-review box listing the figures to confirm)
   404.html                 Not-found page
   favicon.ico              Legacy favicon
   robots.txt, sitemap.xml  Search-engine files (absolute URLs on zastras.uk)
@@ -68,7 +69,7 @@ Only `site/` is published. Everything else stays in the repository.
 
 ## Editing the text
 
-All copy is in `site/index.html` and `site/privacy/index.html`. Each section of the home page is a `<section>` with an `id`, in this order:
+All copy is in `site/index.html`, `site/privacy/index.html` and `site/retainer/index.html`. Each section of the home page is a `<section>` with an `id`, in this order:
 
 | `id` | Section |
 |---|---|
@@ -78,13 +79,15 @@ All copy is in `site/index.html` and `site/privacy/index.html`. Each section of 
 | `who-we-help` | Example starting points by sector |
 | `approach` | The seven-step sequence |
 | `team` | The two profile cards |
+| `costs` | The three prices (process review, pilot, retainer) and how fees work |
 | `contact` | Contact copy and form |
 
 Things to keep in mind when editing:
 
-- **The legal footer** appears in both HTML files and must stay identical. The check script fails if it changes. Before launch, re-verify it against the [Companies House record](https://find-and-update.company-information.service.gov.uk/company/SC832156).
+- **The legal footer** appears in every HTML page and must stay identical. The check script fails if it changes. Before launch, re-verify it against the [Companies House record](https://find-and-update.company-information.service.gov.uk/company/SC832156).
 - **Outcomes are not guarantees.** Keep wording such as "might look like" and "how we would check", and do not add statistics, client names, testimonials, certifications or logos that are not real and approved. Banks named in Lex's biography are career history, not clients.
-- **Navigation** is duplicated in the header and footer of each page. If you add a section, update both, plus `privacy/index.html`.
+- **Navigation** is duplicated in the header and footer of each page. If you add a section, update both, plus `privacy/index.html` and `retainer/index.html`.
+- **Prices** are in the `costs` section of `site/index.html`. The retainer range (£400 to £900 a month) is repeated in `site/retainer/index.html`, in the summary and in the fees section, so change all three together. The retainer page's owner-review box lists every figure and position in the terms that is a proposal rather than a decision; it blocks `--production` until it is deleted.
 - **Colours and spacing** are CSS custom properties at the top of `main.css`. Change a token there rather than a value in a component.
 - **Page titles, descriptions and Open Graph tags** are in each page's `<head>`. Keep the canonical URLs on `https://zastras.uk`.
 

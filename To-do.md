@@ -6,6 +6,19 @@ Action items for the Zastras Practical AI website. Updated 24 November 2026. The
 
 - [ ] the applied AI specialist's name and photo, only if they agree
 
+## Costs and retainer terms (drafted 24 November 2026)
+
+The home page now has a costs section with the three prices (process review £500–£750, one-workflow pilot £2,000–£5,000, ongoing care retainer £400–£900 a month), and `site/retainer/index.html` holds draft retainer terms. The retainer page is marked as a draft and carries an owner-review box that lists every figure and position that is a proposal. `node scripts/check-site.mjs --production` fails until that box, the draft banner and the publication date are gone, so the `noindex` removal cannot go ahead with it unfinished.
+
+- [ ] **Confirm the wording added around the prices** in the costs section: "Each stage is a separate decision", "A written fee before any work starts", "What sets the price" under each card, and "exclude VAT, which we add where it applies". The section does not say whether the first conversation is free. Add a line if it is.
+- [ ] **VAT.** Confirm the company's VAT status and that quoting prices excluding VAT is what you want. The wording is accurate either way.
+- [ ] **Work through the owner-review box on the retainer page** and confirm or change each position: notice and term, response times, payment and fee changes, the liability cap, third-party tool fees, ownership, handover, Scots law, change allowance, training.
+- [ ] **Decide where one-off staff training sits.** Service 03 on the home page is "Training and ongoing care", but only the retainer is priced. Say whether training is part of the pilot, part of the retainer, or quoted separately, and update both pages.
+- [ ] **Set the monthly change allowance** that goes with each price point (for example, hours of changes a month at £400, £650 and £900). The terms leave it to the order form because no figure exists yet.
+- [ ] **Draft the order form and a data processing agreement.** The terms rely on both. Under UK GDPR, handling personal data for a client needs a written contract with the client.
+- [ ] **Have a solicitor read the retainer terms** before publication, the liability, data protection and Scots-law parts most of all. Check the liability cap against any professional indemnity or cyber insurance the company holds; the page claims none.
+- [ ] On publication (with the `noindex` removal): set "Last updated" on the retainer page, delete its draft banner and owner-review box, then run `node scripts/check-site.mjs --production`.
+
 ## Privacy notice (live, but still marked draft; the review boxes are gone)
 
 The lawful basis is decided: legitimate interests, Article 6(1)(f) UK GDPR. On 23 November 2026 the owner answered the open facts: access is the Director only, enquiries are kept for 12 months, Formspree's listing includes the UK Extension, and the company is on the ICO register. The first three are now written into the notice. The ICO registration is deliberately not claimed on the site. What is left:
@@ -42,7 +55,7 @@ Still to do, in this order (details in [docs/CUTOVER.md](docs/CUTOVER.md), secti
 - [ ] Send a real test email to the domain from outside, and one from it, and confirm both arrive. Mail records are unchanged, but the test has not been done.
 - [ ] Re-check the Companies House record on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>.
 - [ ] Re-audit cookies and third-party requests on the live domain (the earlier audit ran against the preview).
-- [ ] Close the privacy items above, then publish: set "Last updated", delete the draft banner, remove the two `PREVIEW-NOINDEX` blocks, run `node scripts/check-site.mjs --production` and `node scripts/verify-cutover.mjs --after --indexable`.
+- [ ] Close the privacy items above, then publish: set "Last updated", delete the draft banner, remove the three `PREVIEW-NOINDEX` blocks (home, privacy and retainer pages), run `node scripts/check-site.mjs --production` and `node scripts/verify-cutover.mjs --after --indexable`.
 - [ ] Turn on two-factor authentication on the Squarespace account that controls the domain (not set up as of 24 November 2026).
 
 ## Optional, later

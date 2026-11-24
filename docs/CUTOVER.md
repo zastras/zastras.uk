@@ -62,7 +62,7 @@ This checklist covers: preparing the repository, verifying and configuring the d
   node scripts/check-site.mjs --production
   ```
 
-  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. On 24 November 2026 it still fails on six items: the two `noindex` tags, the two `PREVIEW-NOINDEX` comments, the draft banner and the `[publication date]` placeholder.
+  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. Once the retainer terms page is merged it fails on eleven items: the three `noindex` tags, the three `PREVIEW-NOINDEX` comments, the draft banners and `[publication date]` placeholders on the privacy and retainer pages, and the retainer page's owner-review box. The retainer page (`site/retainer/index.html`) needs the owner's decisions listed in [To-do.md](../To-do.md). If the owner would rather launch without that page, delete the `site/retainer/` folder, its entry in `site/sitemap.xml`, and the "Retainer terms" links in the footers and the costs section of the home page.
 - [x] The latest run of the *Check and deploy site* workflow on `main` is green and `https://zastras.uk/` shows the approved content (checked 24 November 2026).
 
 ## B. Inventory the existing DNS (before changing anything)
@@ -181,10 +181,11 @@ Use a private window or `curl`, so you see what a new visitor sees.
 - [x] **www redirect:** `curl -sI https://www.zastras.uk | head` shows a `301` to `https://zastras.uk/`. *Verified.*
 - [ ] **Internal links:** every item in the header and footer navigation scrolls to the right section; the privacy link works from the home page and the privacy page links back; the "Discuss a workflow" and "How we work" buttons work. Run `node scripts/check-site.mjs --external` for a mechanical pass.
 - [ ] **Images and fonts:** nothing 404s (browser developer tools, Network tab); the logo, both team images and the fonts load; `https://zastras.uk/favicon.ico` and `https://zastras.uk/assets/img/og-image.png` return 200. *Partly checked: the verifier fetched the stylesheet, script, font, the team images, `favicon.ico` and `og-image.png` and all returned 200. The browser Network-tab pass is still to do.*
-- [ ] **Metadata:** view source on both pages: titles, descriptions, canonical URLs (`https://zastras.uk/` and `https://zastras.uk/privacy/`) and Open Graph tags are correct. Paste the URL into the LinkedIn Post Inspector or a messaging app to confirm the share card shows the Open Graph image.
-- [x] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the two pages on `zastras.uk`. *Verified on 24 November 2026: both load and the sitemap lists the two pages.*
+- [ ] **Metadata:** view source on each page: titles, descriptions, canonical URLs (`https://zastras.uk/`, `https://zastras.uk/privacy/` and `https://zastras.uk/retainer/`) and Open Graph tags are correct. Paste the URL into the LinkedIn Post Inspector or a messaging app to confirm the share card shows the Open Graph image.
+- [ ] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the three pages on `zastras.uk`. *Verified on 24 November 2026 while two pages were published (both files loaded and the sitemap listed both); check again once the retainer page has deployed.*
 - [ ] **Contact form, on the live domain:** send one clearly labelled test enquiry. Confirm it appears in the Formspree dashboard **and** arrives in the notification inbox. Then, in Formspree, set **Restrict to Domain** to `zastras.uk` (no `www`) and send a second labelled test to confirm it still arrives and is not in the spam tab.
 - [ ] **Privacy notice** reads correctly on the live site and its legal footer matches Companies House.
+- [ ] **Costs and retainer terms:** the prices in the home page costs section match the approved figures, and the "retainer terms" link there opens `https://zastras.uk/retainer/`.
 - [ ] **Email:** repeat the inbound and outbound test emails from Section D.
 - [ ] **Cookies and third parties:** developer tools show no cookies and requests only to `zastras.uk` (plus `formspree.io` when the form is submitted).
 
@@ -192,10 +193,10 @@ Use a private window or `curl`, so you see what a new visitor sees.
 
 Until now every page carries `<meta name="robots" content="noindex, nofollow">`, so the site has been verified live without being indexed.
 
-- [ ] Open a pull request that **deletes the two `PREVIEW-NOINDEX` blocks** (the comment and the `noindex` meta tag) in `site/index.html` and `site/privacy/index.html`.
+- [ ] Open a pull request that **deletes the three `PREVIEW-NOINDEX` blocks** (the comment and the `noindex` meta tag) in `site/index.html`, `site/privacy/index.html` and `site/retainer/index.html`.
 - [ ] `node scripts/check-site.mjs --production` now passes with no failures (and no placeholder warning).
 - [ ] After the deploy, `node scripts/verify-cutover.mjs --after --indexable` reports no problems.
-- [ ] Merge; wait for the deploy; confirm `curl -s https://zastras.uk | grep -ci noindex` prints `0`, and the same for `/privacy/`.
+- [ ] Merge; wait for the deploy; confirm `curl -s https://zastras.uk | grep -ci noindex` prints `0`, and the same for `/privacy/` and `/retainer/`.
 - [ ] Optional: add `https://zastras.uk` to Google Search Console and submit `https://zastras.uk/sitemap.xml`.
 
 ## Rollback

@@ -5,8 +5,9 @@
    4. Layout           5. Buttons           6. Header and navigation
    7. Hero             8. Section patterns  9. Outcomes
    10. Services        11. Who we help      12. Approach
-   13. Team            14. Contact form     15. Footer
-   16. Privacy page    17. Utilities        18. Motion, contrast, print
+   13. Team            13b. Costs           14. Contact form
+   15. Footer          16. Privacy and retainer pages
+   17. Utilities       18. Motion, contrast, print
    ========================================================================== */
 
 /* 1. Fonts ---------------------------------------------------------------
@@ -329,9 +330,14 @@ a:hover { text-decoration-thickness: 0.14em; }
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 500;
+  white-space: nowrap;
   color: var(--mist);
   text-decoration: none;
   transition: color 0.15s ease;
+}
+/* Six links plus the button need slightly tighter spacing just above the mobile breakpoint */
+@media (min-width: 62.0625rem) and (max-width: 72rem) {
+  .site-nav a { padding-inline: 0.55rem; }
 }
 .site-nav a:hover { color: var(--white); }
 .site-nav a[aria-current="true"] { color: var(--white); }
@@ -611,6 +617,7 @@ a:hover { text-decoration-thickness: 0.14em; }
   font-size: var(--fs-small);
   line-height: 1.6;
 }
+.section--white .note { background: var(--paper); }
 .note strong { color: var(--ink); font-weight: 600; }
 .note svg { width: 1.4rem; height: 1.4rem; flex: none; margin-top: 0.1rem; color: var(--blue-600); }
 
@@ -814,6 +821,72 @@ a:hover { text-decoration-thickness: 0.14em; }
 .profile__bio + .profile__footnote { margin-top: 1.5rem; }
 .profile__footnote > span { display: block; padding-top: 1rem; border-top: 1px solid var(--line); }
 
+/* 13b. Costs --------------------------------------------------------------
+   Three price cards that mirror the three services. Cards sit on the paper tone
+   so they read against the white section. The amount never wraps, so the
+   three-column layout starts only where the widest range (£2,000–£5,000) fits. */
+.prices { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 72rem) { .prices { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+
+.price {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.1rem);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+/* Spacing comes from the flex gap, not from the global p + p margin */
+.price > p, .price__foot p { margin: 0; }
+.price::before {
+  content: "";
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  top: -1px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(90deg, var(--blue-600), var(--teal-400));
+}
+.price__num {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--blue-600);
+}
+.price h3 { font-size: 1.4rem; letter-spacing: -0.02em; }
+.price p { color: var(--ink-muted); font-size: var(--fs-small); line-height: 1.6; }
+.price .price__amount {
+  margin-top: 0.15rem;
+  color: var(--ink);
+  font-size: clamp(1.75rem, 1.3rem + 1.2vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.price__unit {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+}
+.price__foot {
+  margin-top: auto;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--line-strong);
+  display: grid;
+  gap: 0.35rem;
+}
+.price__foot a { font-weight: 600; }
+
 /* 14. Contact form -------------------------------------------------------- */
 .contact { display: grid; gap: clamp(2.25rem, 5vw, 4rem); align-items: start; }
 @media (min-width: 62rem) { .contact { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); } }
@@ -1000,7 +1073,7 @@ textarea.input { min-height: 9.5rem; resize: vertical; }
   max-width: 62rem;
 }
 
-/* 16. Privacy page -------------------------------------------------------- */
+/* 16. Privacy and retainer pages ------------------------------------------ */
 .page-hero { padding-block: clamp(3rem, 7vw, 5rem) clamp(2.5rem, 5vw, 3.5rem); }
 .page-hero__inner { display: grid; gap: 1.1rem; justify-items: start; }
 .page-hero h1 { font-size: clamp(2.2rem, 1.5rem + 3.4vw, 3.6rem); }
@@ -1031,7 +1104,10 @@ textarea.input { min-height: 9.5rem; resize: vertical; }
 .prose h2:first-child { margin-top: 0; }
 .prose h3 { font-size: 1.1rem; margin-top: 1.75rem; }
 .prose ul { list-style: disc; padding-left: 1.3rem; display: grid; gap: 0.5rem; }
+.prose ol { list-style: decimal; padding-left: 1.4rem; display: grid; gap: 0.6rem; }
 .prose li::marker { color: var(--blue-600); }
+.prose ol li::marker { font-weight: 600; }
+.prose strong { font-weight: 600; }
 .owner-decision {
   padding: 1rem 1.2rem;
   border-radius: var(--radius-sm);
@@ -1043,6 +1119,8 @@ textarea.input { min-height: 9.5rem; resize: vertical; }
   line-height: 1.55;
 }
 .owner-decision code { font-family: var(--font-mono); font-size: 0.85em; }
+.owner-decision ul { margin-top: 0.5rem; }
+.owner-decision li::marker { color: var(--amber-ink); }
 .owner-decision strong { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.25rem; }
 
 /* 17. Utilities ----------------------------------------------------------- */
@@ -1078,7 +1156,7 @@ textarea.input { min-height: 9.5rem; resize: vertical; }
 
 @media (forced-colors: active) {
   .hero h1 .accent { background: none; -webkit-text-fill-color: currentColor; color: CanvasText; }
-  .btn, .input, .card, .service, .flow-card { border: 1px solid CanvasText; }
+  .btn, .input, .card, .service, .price, .flow-card { border: 1px solid CanvasText; }
   .flow__item::before, .step::before { background: CanvasText !important; }
 }
 
