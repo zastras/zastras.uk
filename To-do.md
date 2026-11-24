@@ -15,8 +15,8 @@ The lawful basis is decided: legitimate interests, Article 6(1)(f) UK GDPR. On 2
 - [ ] **Two-factor authentication** on the Formspree account and the receiving mailbox, and no forwarding rules or delegates on the mailbox.
 - [ ] **Formspree as processor (loose end, not a blocker).** Ask Formspree to confirm it acts as our processor and whether it offers a data processing agreement. Its privacy policy describes API users as independent controllers, while its security page says it acts as a processor. The message is in the internal compliance record; the transfer question in it is now answered, so send only the other points.
 - [ ] Sign the legitimate interests assessment (internal record).
-- [ ] Approve the website hosting section and the cookie wording (the two remaining amber boxes on the privacy page).
-- [ ] On publication: set "Last updated", delete the review boxes and the draft banner, then run `node scripts/check-site.mjs --production`.
+- [x] Website hosting section and cookie wording approved by the owner on 24 November 2026; the review boxes are removed from the page. The notice names no transfer safeguard for GitHub's US processing of visitor IP logs (see the internal record).
+- [ ] On publication (with the `noindex` removal): set "Last updated" and delete the draft banner, then run `node scripts/check-site.mjs --production`.
 - [x] **UK transfer safeguard:** Formspree's Data Privacy Framework entry reads Active and includes the UK Extension (owner, 23 November 2026). Written into the notice.
 - [x] **Access** confirmed on 23 November 2026: the Director only.
 - [x] **ICO data protection fee:** the company is on the ICO register (checked on the register, 23 November 2026; details in the internal record). Diary the renewal. Check that the register entry's address and trading names are current.
