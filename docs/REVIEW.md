@@ -44,7 +44,6 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 - Three short principles under the hero buttons: "One workflow at a time", "A person reviews what matters", "Measured against a baseline".
 - The hero illustration: a four-step enquiry-handling example (a tenant reporting a leaking tap), explicitly labelled "Illustration" with a note that every workflow starts from the firm's own process.
 - A three-step "what happens next" in the contact section, without any promised response time.
-- A footnote on Lex's card: the organisations named describe previous career experience, and none is a client or endorser.
 - "No pressure, and no obligation" in the contact copy.
 - The second profile's role line, **"Applied AI | Security-minded implementation"**, which is derived from the brief's biography rather than supplied. The brief only gave a title and a placeholder for the name. Change or remove it freely.
 - Line icons for the outcomes and sectors.
