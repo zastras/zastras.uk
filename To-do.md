@@ -1,6 +1,6 @@
 # To-do
 
-Action items for the Zastras Practical AI website. Updated 24 November 2026. The site is live at `https://zastras.uk/` (DNS switched, HTTPS enforced), but search engines are told not to index it (`noindex`) until the privacy items below are closed. Where the cutover stands: [docs/CUTOVER.md](docs/CUTOVER.md), "Status on 24 November 2026".
+Action items for the Zastras Accelerate website. Updated 24 November 2026. The site is live at `https://zastras.uk/` (DNS switched, HTTPS enforced), but search engines are told not to index it (`noindex`) until the privacy items below are closed. Where the cutover stands: [docs/CUTOVER.md](docs/CUTOVER.md), "Status on 24 November 2026".
 
 ## Team page
 
