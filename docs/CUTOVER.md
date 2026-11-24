@@ -19,8 +19,10 @@ This checklist covers: preparing the repository, verifying and configuring the d
 
 - **Setting the custom domain makes the preview URL redirect.** As soon as `zastras.uk` is saved as the Pages custom domain, `https://zastras.github.io/zastras.uk/` starts redirecting to `https://zastras.uk`, which still points at Squarespace until DNS is switched. So do Sections C and D in one sitting, with nobody relying on the preview in between.
 - **The domain's DNS is hosted at Squarespace Domains** (the name servers observed are Google's legacy `ns-cloud-e1` to `e4.googledomains.com`, which Squarespace Domains inherited). Edit records in *Squarespace, Domains, zastras.uk, DNS settings*. If the default Squarespace records are locked while the domain is connected to the holding page, you may need to disconnect the domain from the Squarespace website (this keeps the registration) or switch to custom records; check Squarespace's DNS help for the current wording of that screen.
-- **Email runs on Google.** The MX, SPF and DKIM records below carry it. They are not part of this change and must come out of it exactly as they went in.
-- **DNS changes can take up to 24 hours to propagate**, according to GitHub's documentation. Pick a time when a short interruption to the web page is acceptable. Email is unaffected because no mail record changes.
+- **Email runs on Google.** The MX, SPF and DKIM records below carry it. They are not part of this change and must come out of it exactly as they went in. The Squarespace DNS Settings page shows a banner saying Google Workspace manages this domain and that changes could affect its functionality, which is why only the web records are touched. DNSSEC is off (no DS or DNSKEY records found on 23 November 2026), so there is no signing step to coordinate.
+- **Turn on two-factor authentication on the Squarespace account first.** The dashboard was prompting for it on 23 November 2026, and this account controls the domain, so it should not be left on a password alone. Squarespace also asks for the password or a 2FA code before it lets you add, edit or delete a record.
+- **DNS changes can take up to 24 hours to propagate**, according to GitHub's documentation, and every record currently has a 4-hour TTL (see Section B). Pick a time when a short interruption to the web page is acceptable. Email is unaffected because no mail record changes.
+- **There will be a certificate gap, and Squarespace has set HSTS on the apex.** Squarespace currently sends `Strict-Transport-Security: max-age=15552000` (180 days) for `zastras.uk` and `www.zastras.uk` (observed 23 November 2026, no `includeSubDomains`). GitHub can only issue the certificate for `zastras.uk` after the DNS check passes, which is after the records are switched. Until then, anyone who has visited the Squarespace page in that browser and reaches the new servers gets a hard certificate error with no click-through, and everyone else gets a warning. Plan for it: do the switch at a quiet time, save the repository custom domain (Section C) immediately before the switch so GitHub can begin its DNS check and certificate request as early as possible, and treat the gap as the period from the DNS switch until **Enforce HTTPS** becomes tickable (usually minutes, at most about a day).
 - **No `CNAME` file is needed.** The site publishes through a GitHub Actions workflow, and GitHub ignores any `CNAME` file in that case.
 - Nothing here needs a secret to be committed to the repository.
 
@@ -63,23 +65,24 @@ Take a record of everything, so you can restore it exactly.
   node scripts/verify-cutover.mjs --before
   ```
 
-- [ ] Note the **TTL** of each record. On 23 November 2026 every record had a TTL of **14400 seconds (4 hours)**, so resolvers can keep the old Squarespace answer for up to 4 hours after the switch, and a rollback would take as long.
-- [ ] **Lower the TTLs** on the apex A and `www` records to 300 seconds at least 4 hours (the old TTL) before the switch, so both the switch and any rollback take effect within minutes.
+- [x] Note the **TTL** of each record. On 23 November 2026 the DNS panel showed **4 hrs** for every record except `_domainconnect` (1 hr), and the authoritative name server (`ns-cloud-e1.googledomains.com`) served **14400 seconds (4 hours)** for all of them, `_domainconnect` included. Re-read them from the panel on the day.
+- [ ] **Give the new records a short TTL, rather than lowering the old ones.** The Squarespace A and `www` records are listed in a separate *Squarespace Defaults* block (see Section D), and it is not confirmed that their TTL can be edited. So create the new GitHub records with a TTL of **300 seconds (5 minutes)**. That makes a rollback quick for anyone who has already cached the new answers. Visitors who cached the old Squarespace answer keep it for up to 4 hours after the switch; that is harmless, because they simply keep seeing the holding page until it expires. Records restored during a rollback come back at 4 hours.
 
 **What was observed on 23 November 2026** (by `dig`; confirm against the DNS panel, which is the source of truth):
 
-| Name | Type | Value observed | Action at cutover |
-|---|---|---|---|
-| `zastras.uk` | A | `198.185.159.145` (Squarespace) | **Replace** with the four GitHub addresses in Section D |
-| `zastras.uk` | AAAA | none | **Add** the four GitHub IPv6 addresses (optional, recommended by GitHub) |
-| `www.zastras.uk` | CNAME | `ext-sq.squarespace.com.` | **Replace** with `zastras.github.io.` |
-| `zastras.uk` | MX | `1 smtp.google.com.` | **Keep unchanged** |
-| `zastras.uk` | TXT (SPF) | `"v=spf1 include:_spf.google.com ~all"` | **Keep unchanged** |
-| `google._domainkey.zastras.uk` | TXT (DKIM) | `"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz61yeLjz3ePAC…"` (full key in the panel) | **Keep unchanged** |
-| `_dmarc.zastras.uk` | TXT | none found | Nothing to preserve (see "DMARC" below) |
-| `_domainconnect.zastras.uk` | CNAME | `_domainconnect.domains.squarespace.com.` | Leave as is (Squarespace's one-click DNS helper; harmless) |
-| `zastras.uk` | NS | `ns-cloud-e1` to `e4.googledomains.com.` | **Do not change** |
-| `zastras.uk` | CAA | none found | Nothing to preserve |
+| Name | Type | TTL | Value observed | Action at cutover |
+|---|---|---|---|---|
+| `zastras.uk` | A | 14400 | `198.185.159.145` (Squarespace) | **Replace** with the four GitHub addresses in Section D |
+| `zastras.uk` | AAAA | n/a | none | **Add** the four GitHub IPv6 addresses (optional, recommended by GitHub) |
+| `www.zastras.uk` | CNAME | 14400 | `ext-sq.squarespace.com.` | **Replace** with `zastras.github.io.` |
+| `zastras.uk` | MX | 14400 | `1 smtp.google.com.` | **Keep unchanged** |
+| `zastras.uk` | TXT (SPF) | 14400 | `"v=spf1 include:_spf.google.com ~all"` | **Keep unchanged** |
+| `google._domainkey.zastras.uk` | TXT (DKIM) | 14400 | `"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz61yeLjz3ePAC…"` (full key in the panel) | **Keep unchanged** |
+| `_dmarc.zastras.uk` | TXT | n/a | none found | Nothing to preserve (see "DMARC" below) |
+| `_domainconnect.zastras.uk` | CNAME | 14400 | `_domainconnect.domains.squarespace.com.` | Leave as is (Squarespace's one-click DNS helper; harmless) |
+| `zastras.uk` | NS | 14400 | `ns-cloud-e1` to `e4.googledomains.com.` | **Do not change** |
+| `zastras.uk` | CAA | n/a | none found | Nothing to preserve |
+| `_github-pages-challenge-zastras.zastras.uk` | TXT | n/a | none yet | **Add** in Section C (domain verification) |
 
 Any record in the panel that is not in this table must also be kept unless you can say what it is for and that it is no longer needed.
 
@@ -87,7 +90,7 @@ Any record in the panel that is not in this table must also be kept unless you c
 
 Verifying first stops anyone else from claiming the domain for their own Pages site. Do this in one sitting with Section D.
 
-- [ ] **Verify the domain** for the `zastras` organisation: *github.com, zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`. GitHub shows a TXT record to add, of the form `_github-pages-challenge-zastras.zastras.uk` with a value GitHub gives you. Add exactly that TXT record in Squarespace DNS (this is additive and does not affect the website or email), wait for it to resolve, then click *Verify*. Keep the TXT record afterwards: GitHub re-checks it periodically.
+- [ ] **Verify the domain** for the `zastras` organisation: *github.com, zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`. GitHub shows a TXT record to add, of the form `_github-pages-challenge-zastras.zastras.uk` with a value GitHub gives you. Add exactly that TXT record in Squarespace DNS (this is additive and does not affect the website or email): *Squarespace, Domains, zastras.uk, DNS, DNS Settings, Custom records, Add record*, Type `TXT`, Name `_github-pages-challenge-zastras` (the name only, without `.zastras.uk`), Data the value GitHub shows, pasted as given with no extra quotation marks. Do not touch the existing `@` SPF record. Wait for it to resolve (`dig +short _github-pages-challenge-zastras.zastras.uk TXT`), then in GitHub use the kebab menu next to the domain, *Continue verifying*, then *Verify*. Keep the TXT record afterwards: GitHub re-checks it periodically.
 - [ ] In the repository, *Settings, Pages, Custom domain*: enter **`zastras.uk`** (the apex) and save. Using the apex as the custom domain means GitHub redirects `www.zastras.uk` to `zastras.uk` once both DNS records exist.
 - [ ] Expect a "DNS check unsuccessful" message at this point. That is normal until Section D is done.
 
@@ -95,7 +98,13 @@ Verifying first stops anyone else from claiming the domain for their own Pages s
 
 In Squarespace DNS:
 
-- [ ] **Remove** the Squarespace A record(s) for the apex (`@`) and the `www` CNAME to `ext-sq.squarespace.com.`. Leave every other record alone.
+- [ ] **Know the panel layout** (as pasted on 23 November 2026, *Squarespace, Domains, zastras.uk, DNS, DNS Settings*). Records are in three blocks:
+  - **Squarespace Defaults:** `A @ 198.185.159.145` and `CNAME www ext-sq.squarespace.com`. **These are the two to remove.**
+  - **Squarespace Domain Connect:** `CNAME _domainconnect`. Leave it.
+  - **Custom records:** `MX @ 1 smtp.google.com`, `TXT @` (SPF) and `TXT google._domainkey` (DKIM). Leave all three. New records are added here with *Add record*.
+
+  The panel shows CNAME data without a trailing dot, so enter the `www` target as `zastras.github.io` (no dot).
+- [ ] **Remove** the two *Squarespace Defaults* records (the `@` A record and the `www` CNAME). Squarespace's help says removing the defaults disconnects the domain from the Squarespace site, which is the intent here (it also stops any Squarespace Pay Links on the domain, so confirm there are none). It is **not confirmed** whether the panel lets you delete these two rows individually or only through the preset; if the buttons are not obvious, stop and look at the *Website* tab of the domain before improvising. A `www` CNAME cannot coexist with other `www` records, so delete the old one before adding the new one. Leave every other record alone.
 - [ ] **Add four A records** for `@`:
 
   | Type | Host | Value |
@@ -121,6 +130,7 @@ In Squarespace DNS:
   | CNAME | `www` | `zastras.github.io.` |
 
   The target is the organisation's Pages domain **without the repository name**, and not the `*.pages.github.io` address shown in the settings. Never point `www` at the apex.
+- [ ] On each of the nine new records, set the **TTL to 300 seconds** if the form allows it (the default for custom records is 4 hours). Leave *Priority* as it is (not used for A, AAAA or CNAME).
 - [ ] Do **not** add wildcard (`*`) records. GitHub advises against them because they invite domain takeover.
 - [ ] Confirm the records resolve (allow time to propagate):
 
