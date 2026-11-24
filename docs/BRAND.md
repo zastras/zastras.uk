@@ -1,4 +1,4 @@
-# Brand: Zastras Practical AI
+# Brand: Zastras Accelerate
 
 The identity has to do two jobs at once: feel unmistakably current and AI-aware, and reassure a law-firm partner or practice manager that the people behind it are sober and careful. Every choice below is made to serve both.
 
@@ -34,7 +34,7 @@ Files:
 
 ## The wordmark
 
-**Zastras** set in Geist at weight 650 with tight tracking, over **PRACTICAL AI** in Geist Mono, widely spaced, in light blue. The two lines carry the two registers of the brand: a confident name, and a quiet technical descriptor.
+**Zastras** set in Geist at weight 650 with tight tracking, over **ACCELERATE** in Geist Mono, widely spaced, in light blue. The two lines carry the two registers of the brand: a confident name, and a quiet technical descriptor.
 
 On the site the wordmark is live text beside the mark. Pre-rendered lockups for other uses are in `docs/brand/`:
 

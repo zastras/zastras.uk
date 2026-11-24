@@ -19,7 +19,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "site");
 const ORIGIN = "https://zastras.uk";
 const FORM_ENDPOINT = "https://formspree.io/f/maeolban";
 const LEGAL_TEXT =
-  "Zastras Practical AI is a service of ZASTRAS LTD. Registered in Scotland. Company number SC832156. Registered office: 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP.";
+  "Zastras Accelerate is a service of ZASTRAS LTD. Registered in Scotland. Company number SC832156. Registered office: 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP.";
 
 const args = new Set(process.argv.slice(2));
 const PRODUCTION = args.has("--production");

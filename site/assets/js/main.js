@@ -1,4 +1,4 @@
-/* Zastras Practical AI: progressive enhancement only.
+/* Zastras Accelerate: progressive enhancement only.
    The page, navigation and contact form all work without this file.
    It adds: a mobile menu, "you are here" highlighting, and inline form feedback. */
 (function () {

@@ -1,6 +1,6 @@
 # zastras.uk
 
-Source for the **Zastras Practical AI** website: a one-page site plus a privacy notice and retainer terms, built as plain HTML, CSS and a small amount of JavaScript. No framework, no build step, no analytics, no cookies.
+Source for the **Zastras Accelerate** website: a one-page site plus a privacy notice and retainer terms, built as plain HTML, CSS and a small amount of JavaScript. No framework, no build step, no analytics, no cookies.
 
 > **Status: live, not yet indexable.** `https://zastras.uk/` serves this site over HTTPS (DNS switched on 23 November 2026). Every page still carries a `noindex` tag until the privacy items in [To-do.md](To-do.md) are closed; removing it is the last step of [docs/CUTOVER.md](docs/CUTOVER.md). Nothing in this repository changes DNS.
 
