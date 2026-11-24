@@ -475,12 +475,16 @@
           </article>
 
           <!-- ===== Profile 2: Applied AI Specialist =====
-               The name, photograph and biography are not yet public. The abstract graphic is intentional.
-               To add them later: replace the <img> (src, width, height, alt), the <h3> and the role line,
-               and edit the paragraphs. Keep the filename generic until the person agrees to be named. See README. -->
+               The photograph is in place; the name and biography are not yet public. To add the name later:
+               replace the <h3> and the role line, edit the paragraphs, and update the alt text.
+               Keep the filenames generic until the person agrees to be named. See README. -->
           <article class="card profile" aria-labelledby="profile-specialist">
             <figure class="portrait" style="--portrait-pos: 50% 40%">
-              <img src="assets/img/team/applied-ai-specialist.svg" width="1200" height="1000" loading="lazy" decoding="async" alt="">
+              <img src="assets/img/team/applied-ai-specialist-1200.webp"
+                   srcset="assets/img/team/applied-ai-specialist-600.webp 600w, assets/img/team/applied-ai-specialist-1200.webp 1200w"
+                   sizes="(min-width: 56rem) 35rem, calc(100vw - 2.5rem)"
+                   width="1200" height="1000" loading="lazy" decoding="async"
+                   alt="Portrait of our applied AI specialist, in a navy knitted sweater against a dark grey background">
             </figure>
             <div class="profile__body">
               <h3 id="profile-specialist">Applied AI Specialist</h3>

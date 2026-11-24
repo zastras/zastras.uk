@@ -108,12 +108,13 @@ Lex's photograph is in place: a 6:5 crop of the supplied headshot, exported as W
 
 ### The applied AI specialist
 
-The card deliberately shows an abstract graphic (`applied-ai-specialist.svg`) and the public title only. **Do not add a name, initial or any identifying detail until the person has agreed to be named.** When they have:
+The card shows a 6:5 crop of the supplied photograph, zoomed in from the original (`applied-ai-specialist-1200.webp`, about 22 KB, and `applied-ai-specialist-600.webp`, about 9 KB, referenced with `srcset`), and the public title only. The original photograph is kept locally and not committed. The file names and alt text are deliberately generic. **Do not add a name, initial or any identifying detail until the person has agreed to be named.** When they have:
 
-1. Follow the same photograph steps (6:5 crop, two sizes, metadata removed), saving the files under their name (for example `firstname-lastname-1200.webp`).
-2. In the second card, replace the `<img>` (`src`, `width`, `height`, `alt`), the `<h3>`, the role line and the biography.
+1. In the second card, replace the `<h3>`, the role line and the biography, and update the `alt` text on the `<img>`.
+2. Optionally rename the two image files under their name (for example `firstname-lastname-1200.webp`) and update `src` and `srcset` to match, and the entry in `scripts/verify-cutover.mjs`.
 3. Keep the `aria-labelledby` and `id` pair in step if you rename the heading's `id`.
-4. Remove `applied-ai-specialist.svg`.
+
+To swap in a different photograph, follow the same steps as for Lex: a 6:5 crop, exported at 1200 × 1000 and 600 × 500 px with no metadata (for example `cwebp -q 80 -crop X Y W H -resize 1200 1000 original.jpg -o applied-ai-specialist-1200.webp`).
 
 Also search the repository for the old title, and remember that file names, alt text and commit messages are all public.
 
