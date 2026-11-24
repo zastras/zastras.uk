@@ -1,12 +1,12 @@
 # To-do
 
-Action items for the Zastras Practical AI website. Updated 23 November 2026. The site is not live: `zastras.uk` still serves the Squarespace holding page until the cutover in [docs/CUTOVER.md](docs/CUTOVER.md) is approved and carried out.
+Action items for the Zastras Practical AI website. Updated 24 November 2026. The site is live at `https://zastras.uk/` (DNS switched, HTTPS enforced), but search engines are told not to index it (`noindex`) until the privacy items below are closed. Where the cutover stands: [docs/CUTOVER.md](docs/CUTOVER.md), "Status on 24 November 2026".
 
 ## Team page
 
 - [ ] the applied AI specialist's name and photo, only if they agree
 
-## Privacy notice (draft: amber review boxes on the page mark each open item)
+## Privacy notice (live, but still marked draft; the review boxes are gone)
 
 The lawful basis is decided: legitimate interests, Article 6(1)(f) UK GDPR. On 23 November 2026 the owner answered the open facts: access is the Director only, enquiries are kept for 12 months, Formspree's listing includes the UK Extension, and the company is on the ICO register. The first three are now written into the notice. The ICO registration is deliberately not claimed on the site. What is left:
 
@@ -23,21 +23,27 @@ The lawful basis is decided: legitimate interests, Article 6(1)(f) UK GDPR. On 2
 
 ## Formspree settings
 
-- [ ] At cutover, turn "Restrict to Domain" back on for `zastras.uk` (no `www`), then send one labelled test from the live domain. Do not turn it on earlier: it files preview submissions as spam.
+- [ ] **Now due, as the domain is live:** send one labelled test enquiry from `https://zastras.uk/`, check it reaches the Formspree dashboard and the notification inbox, then turn "Restrict to Domain" on for `zastras.uk` (no `www`) and send a second labelled test to confirm it still arrives and is not filed as spam.
 - [ ] If reCAPTCHA is ever switched back on, repeat the cookie audit and add the provider to the notice.
 
 ## Launch
 
-The cutover was approved on 23 November 2026, with the DNS switch **held until the privacy items above are resolved**. You make the DNS and GitHub settings edits; Claude supplies the values and verifies from outside with `node scripts/verify-cutover.mjs`.
+The cutover was approved on 23 November 2026. Lex made the DNS changes in Squarespace that evening; on 24 November the Pages custom domain and Enforce HTTPS were switched on at his explicit yes. Claude verifies from outside with `node scripts/verify-cutover.mjs --after` (last run 24 November 2026: no problems).
 
-Safe to do now (additive; nothing changes for visitors or email):
+Done:
 
-- [ ] In the DNS panel, lower the TTL of the apex A record and the `www` CNAME to 300 seconds (they are 14400 today), at least 4 hours before the switch.
-- [ ] In GitHub, as an organisation owner: *zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`, and add the TXT record GitHub shows (named `_github-pages-challenge-zastras`) in the DNS panel, then click Verify. Do **not** set the custom domain on the repository yet: that would make the preview URL redirect to the still-Squarespace domain.
+- [x] DNS: four A and four AAAA records at the apex and a `www` CNAME to `zastras.github.io.`, all at a 300 second TTL; the Squarespace default records removed; MX, SPF, DKIM and the name servers unchanged.
+- [x] Domain verified in the GitHub organisation, `zastras.uk` set as the Pages custom domain, certificate approved (expires 22 February 2027, renewed automatically), Enforce HTTPS on, `http` and `www` redirect to `https://zastras.uk/`.
+- [x] Design, copy and team presentation approved (with the cutover approval of 23 November 2026).
 
-- [ ] Approve the design, copy and team presentation on the preview.
-- [ ] Re-check the Companies House record on the day.
-- [ ] Work through [docs/CUTOVER.md](docs/CUTOVER.md): DNS inventory, GitHub domain verification, switch the web records, HTTPS, post-switch checks, then remove `noindex`.
+Still to do, in this order (details in [docs/CUTOVER.md](docs/CUTOVER.md), sections D to G):
+
+- [ ] Formspree: labelled test from the live domain, then Restrict to Domain (see "Formspree settings" above).
+- [ ] Send a real test email to the domain from outside, and one from it, and confirm both arrive. Mail records are unchanged, but the test has not been done.
+- [ ] Re-check the Companies House record on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>.
+- [ ] Re-audit cookies and third-party requests on the live domain (the earlier audit ran against the preview).
+- [ ] Close the privacy items above, then publish: set "Last updated", delete the draft banner, remove the two `PREVIEW-NOINDEX` blocks, run `node scripts/check-site.mjs --production` and `node scripts/verify-cutover.mjs --after --indexable`.
+- [ ] Turn on two-factor authentication on the Squarespace account that controls the domain (not set up as of 24 November 2026).
 
 ## Optional, later
 

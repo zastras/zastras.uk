@@ -1,12 +1,12 @@
 # Review notes
 
-For the owner's review of the first version of the site. Written 23 November 2026. Nothing here has gone live: `zastras.uk` still serves the Squarespace holding page and no DNS record has been changed.
+For the owner's review of the first version of the site. Written 23 November 2026, updated 24 November 2026. The site has since gone live at `zastras.uk` (DNS switched on 23 November 2026, HTTPS enforced on 24 November 2026); it is still marked `noindex`. See [CUTOVER.md](CUTOVER.md), "Status on 24 November 2026". The checks below were run against the preview before the switch.
 
 ## What to look at
 
 | What | Where |
 |---|---|
-| Live preview (marked `noindex`) | https://zastras.github.io/zastras.uk/ and https://zastras.github.io/zastras.uk/privacy/ |
+| Live site (marked `noindex`) | https://zastras.uk/ and https://zastras.uk/privacy/ (the old `zastras.github.io` preview address redirects to these) |
 | Desktop, full page | [previews/desktop-home.jpg](previews/desktop-home.jpg), [previews/desktop-privacy.jpg](previews/desktop-privacy.jpg) |
 | Mobile, key screens and the open menu | [previews/mobile-overview.jpg](previews/mobile-overview.jpg) |
 | The reasoning behind the visual identity | [BRAND.md](BRAND.md) |

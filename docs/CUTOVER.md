@@ -1,6 +1,24 @@
 # Production cutover checklist: zastras.uk
 
-**Do not start this until the owner has approved the design, copy, team presentation and privacy notice, and has said "go".** Until then `zastras.uk` keeps serving the Squarespace holding page and no DNS record is touched.
+## Status on 24 November 2026: the domain is switched and live; indexing is still off
+
+The owner approved the cutover on 23 November 2026 and made the DNS changes himself in Squarespace that evening. On 24 November 2026, at his explicit yes, the Pages custom domain was saved and Enforce HTTPS turned on through the GitHub API. Sections B to E are done and were checked from outside on 24 November 2026 with `node scripts/verify-cutover.mjs --after` ("No problems"), the Pages API and `dig`:
+
+- Apex: four GitHub A records and four AAAA records; `www` is a CNAME to `zastras.github.io.`; all nine at a 300 second TTL. The two Squarespace default records are gone and nothing wildcard exists.
+- Email is untouched: MX, SPF, DKIM and the name servers match the "before" snapshot. The domain-verification TXT record is present and the Pages domain state is `verified`.
+- `zastras.uk` is the Pages custom domain. The certificate covers `zastras.uk` and `www.zastras.uk` (approved, expires 22 February 2027, renewed automatically by GitHub), and Enforce HTTPS is on. `http://` and `www` both return a 301 to `https://zastras.uk/`. The old preview address `https://zastras.github.io/zastras.uk/` now redirects to the domain.
+- The workflow run on `main` is green and `https://zastras.uk/` serves the new site, with the legal footer, the right canonical URL and a 404 page of its own.
+
+**Still to do, in this order:**
+
+1. Contact form on the live domain: send a labelled test, set Formspree *Restrict to Domain* to `zastras.uk` (no `www`), send a second one (Section F).
+2. A real inbound and outbound email test on the domain (Sections D and F).
+3. Cookie and third-party re-audit on the live domain (Section F).
+4. The privacy items that gate publication: [To-do.md](../To-do.md) lists them (deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked on the day, Companies House re-check, adviser read, "Last updated" date, draft banner removed).
+5. Only then Section G: remove `noindex`, so search engines can index the site.
+6. Turn on two-factor authentication on the Squarespace account (not set up as of 24 November 2026).
+
+The sections below are kept as the record of what was done, and for rollback. Wording written before the switch ("will", "before you begin") is unchanged.
 
 This checklist covers: preparing the repository, verifying and configuring the domain in GitHub, inventorying and preserving existing DNS, switching the web records, enabling HTTPS, checking everything after the switch, and finally allowing search indexing. It follows [GitHub's current custom-domain instructions](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site) (values below were checked against that page on 23 November 2026; re-check them on the day).
 
@@ -30,43 +48,43 @@ This checklist covers: preparing the repository, verifying and configuring the d
 
 ## A. Approvals and readiness (no DNS involved)
 
-- [ ] **Design** approved by the owner on the preview, at desktop and mobile widths.
-- [ ] **Copy** approved, including the three additions made during the build that were not in the brief (see [REVIEW.md](REVIEW.md), "Decisions made on your behalf").
-- [ ] **Team presentation** approved: Lex's photograph (already added on the review branch) accepted; the applied AI specialist's page treatment confirmed (name and photograph added only if that person has agreed).
-- [ ] **Privacy notice** approved: the two remaining amber review boxes (hosting section and cookie wording) resolved and deleted, the draft banner removed, the publication date set, the 12-month deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked on the day (it read Active with the UK Extension on 23 November 2026), and a data-protection adviser has read the final text. Retention, access and the transfer safeguard were written in on 23 November 2026 from the owner's answers. See [To-do.md](../To-do.md).
+- [x] **Design** approved by the owner on the preview, at desktop and mobile widths (covered by the owner's approval of the cutover on 23 November 2026).
+- [x] **Copy** approved, including the three additions made during the build that were not in the brief (see [REVIEW.md](REVIEW.md), "Decisions made on your behalf"). Three further passages were removed at the owner's request on 24 November 2026.
+- [x] **Team presentation** approved: Lex's photograph accepted; the applied AI specialist's card keeps the abstract graphic and the title, with no name or photograph until that person agrees.
+- [ ] **Privacy notice** approved. Done on 24 November 2026: the hosting section and cookie wording approved and all amber review boxes removed; retention, access and the transfer safeguard written in from the owner's answers of 23 November 2026. Still open: the draft banner removed, the "Last updated" date set, the 12-month deletion routine in the diary, Formspree's Data Privacy Framework entry re-checked on the day (it read Active with the UK Extension on 23 November 2026), and a data-protection adviser has read the final text. See [To-do.md](../To-do.md).
 - [x] **ICO data protection fee:** the company is on the ICO register (checked on the register on 23 November 2026; details in the internal compliance record). Nothing on the site claims ICO registration. Diary the renewal.
 - [ ] **Formspree** confirmed by the owner: the notification inbox and who has access (the Director only, confirmed 23 November 2026; two-factor authentication still to check). Whether Formspree acts as a processor and offers a data processing agreement is a loose end, not a blocker. reCAPTCHA is currently off (see README). A labelled test sent from the preview on 23 November 2026 was confirmed by the owner in both the Formspree dashboard and the notification inbox (domain restriction was off at the time).
 - [ ] **Companies House** record re-checked on the day: <https://find-and-update.company-information.service.gov.uk/company/SC832156>. Name, number and registered office must match the legal footer exactly. (They matched on 23 November 2026.)
 - [x] **Public address:** the registered office appears in the footer's legal line only, with no wording that invites visits. No other address is shown.
-- [ ] **Launch pull request merged** to `main` containing the resolutions above. Then run:
+- [ ] **Publication pull request merged** to `main`, containing the open privacy items above (draft banner removed, date set). Then run:
 
   ```bash
   node scripts/check-site.mjs --production
   ```
 
-  At this stage the only failures expected are the two `noindex` lines (Section G removes them after the site has been verified live). Anything else it reports must be fixed first.
-- [ ] The latest run of the *Check and deploy site* workflow on `main` is green and the preview at `https://zastras.github.io/zastras.uk/` shows the approved content.
+  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. On 24 November 2026 it still fails on six items: the two `noindex` tags, the two `PREVIEW-NOINDEX` comments, the draft banner and the `[publication date]` placeholder.
+- [x] The latest run of the *Check and deploy site* workflow on `main` is green and `https://zastras.uk/` shows the approved content (checked 24 November 2026).
 
 ## B. Inventory the existing DNS (before changing anything)
 
 Take a record of everything, so you can restore it exactly.
 
 - [ ] Open *Squarespace, Domains, zastras.uk, DNS settings* and **screenshot or export every record**. Save it somewhere durable (not only in your head).
-- [ ] Run these from a terminal and keep the output with the screenshot:
+- [x] Run these from a terminal and keep the output with the screenshot (the observed values are in the table below):
 
   ```bash
   for t in A AAAA CNAME MX TXT NS CAA; do echo "== zastras.uk $t"; dig +noall +answer zastras.uk $t; done
   for h in www _dmarc google._domainkey _domainconnect; do echo "== $h.zastras.uk"; dig +noall +answer $h.zastras.uk ANY; dig +noall +answer $h.zastras.uk TXT; dig +noall +answer $h.zastras.uk CNAME; done
   ```
 
-- [ ] Run the read-only snapshot, which also confirms the mail records are as expected, and keep the output:
+- [x] Run the read-only snapshot, which also confirms the mail records are as expected, and keep the output:
 
   ```bash
   node scripts/verify-cutover.mjs --before
   ```
 
 - [x] Note the **TTL** of each record. On 23 November 2026 the DNS panel showed **4 hrs** for every record except `_domainconnect` (1 hr), and the authoritative name server (`ns-cloud-e1.googledomains.com`) served **14400 seconds (4 hours)** for all of them, `_domainconnect` included. Re-read them from the panel on the day.
-- [ ] **Give the new records a short TTL, rather than lowering the old ones.** The Squarespace A and `www` records are listed in a separate *Squarespace Defaults* block (see Section D), and it is not confirmed that their TTL can be edited. So create the new GitHub records with a TTL of **300 seconds (5 minutes)**. That makes a rollback quick for anyone who has already cached the new answers. Visitors who cached the old Squarespace answer keep it for up to 4 hours after the switch; that is harmless, because they simply keep seeing the holding page until it expires. Records restored during a rollback come back at 4 hours.
+- [x] **Give the new records a short TTL, rather than lowering the old ones.** The Squarespace A and `www` records are listed in a separate *Squarespace Defaults* block (see Section D), and it is not confirmed that their TTL can be edited. So create the new GitHub records with a TTL of **300 seconds (5 minutes)**. That makes a rollback quick for anyone who has already cached the new answers. Visitors who cached the old Squarespace answer keep it for up to 4 hours after the switch; that is harmless, because they simply keep seeing the holding page until it expires. Records restored during a rollback come back at 4 hours.
 
 **What was observed on 23 November 2026** (by `dig`; confirm against the DNS panel, which is the source of truth):
 
@@ -90,22 +108,22 @@ Any record in the panel that is not in this table must also be kept unless you c
 
 Verifying first stops anyone else from claiming the domain for their own Pages site. Do this in one sitting with Section D.
 
-- [ ] **Verify the domain** for the `zastras` organisation: *github.com, zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`. GitHub shows a TXT record to add, of the form `_github-pages-challenge-zastras.zastras.uk` with a value GitHub gives you. Add exactly that TXT record in Squarespace DNS (this is additive and does not affect the website or email): *Squarespace, Domains, zastras.uk, DNS, DNS Settings, Custom records, Add record*, Type `TXT`, Name `_github-pages-challenge-zastras` (the name only, without `.zastras.uk`), Data the value GitHub shows, pasted as given with no extra quotation marks. Do not touch the existing `@` SPF record. Wait for it to resolve (`dig +short _github-pages-challenge-zastras.zastras.uk TXT`), then in GitHub use the kebab menu next to the domain, *Continue verifying*, then *Verify*. Keep the TXT record afterwards: GitHub re-checks it periodically.
-- [ ] In the repository, *Settings, Pages, Custom domain*: enter **`zastras.uk`** (the apex) and save. Using the apex as the custom domain means GitHub redirects `www.zastras.uk` to `zastras.uk` once both DNS records exist.
-- [ ] Expect a "DNS check unsuccessful" message at this point. That is normal until Section D is done.
+- [x] **Verify the domain** for the `zastras` organisation: *github.com, zastras organisation, Settings, Pages, Add a domain*, enter `zastras.uk`. GitHub shows a TXT record to add, of the form `_github-pages-challenge-zastras.zastras.uk` with a value GitHub gives you. Add exactly that TXT record in Squarespace DNS (this is additive and does not affect the website or email): *Squarespace, Domains, zastras.uk, DNS, DNS Settings, Custom records, Add record*, Type `TXT`, Name `_github-pages-challenge-zastras` (the name only, without `.zastras.uk`), Data the value GitHub shows, pasted as given with no extra quotation marks. Do not touch the existing `@` SPF record. Wait for it to resolve (`dig +short _github-pages-challenge-zastras.zastras.uk TXT`), then in GitHub use the kebab menu next to the domain, *Continue verifying*, then *Verify*. Keep the TXT record afterwards: GitHub re-checks it periodically. *Done: the Pages API reports the domain state as `verified` (24 November 2026).*
+- [x] In the repository, *Settings, Pages, Custom domain*: enter **`zastras.uk`** (the apex) and save. Using the apex as the custom domain means GitHub redirects `www.zastras.uk` to `zastras.uk` once both DNS records exist. *Done on 24 November 2026.*
+- [x] Expect a "DNS check unsuccessful" message at this point. That is normal until Section D is done. *It cleared once Section D was done.*
 
 ## D. Switch the web records
 
 In Squarespace DNS:
 
-- [ ] **Know the panel layout** (as pasted on 23 November 2026, *Squarespace, Domains, zastras.uk, DNS, DNS Settings*). Records are in three blocks:
+- [x] **Know the panel layout** (as pasted on 23 November 2026, *Squarespace, Domains, zastras.uk, DNS, DNS Settings*). Records are in three blocks:
   - **Squarespace Defaults:** `A @ 198.185.159.145` and `CNAME www ext-sq.squarespace.com`. **These are the two to remove.**
   - **Squarespace Domain Connect:** `CNAME _domainconnect`. Leave it.
   - **Custom records:** `MX @ 1 smtp.google.com`, `TXT @` (SPF) and `TXT google._domainkey` (DKIM). Leave all three. New records are added here with *Add record*.
 
   The panel shows CNAME data without a trailing dot, so enter the `www` target as `zastras.github.io` (no dot).
-- [ ] **Remove** the two *Squarespace Defaults* records (the `@` A record and the `www` CNAME). Squarespace's help says removing the defaults disconnects the domain from the Squarespace site, which is the intent here (it also stops any Squarespace Pay Links on the domain, so confirm there are none). It is **not confirmed** whether the panel lets you delete these two rows individually or only through the preset; if the buttons are not obvious, stop and look at the *Website* tab of the domain before improvising. A `www` CNAME cannot coexist with other `www` records, so delete the old one before adding the new one. Leave every other record alone.
-- [ ] **Add four A records** for `@`:
+- [x] **Remove** the two *Squarespace Defaults* records (the `@` A record and the `www` CNAME). Squarespace's help says removing the defaults disconnects the domain from the Squarespace site, which is the intent here (it also stops any Squarespace Pay Links on the domain, so confirm there are none). It is **not confirmed** whether the panel lets you delete these two rows individually or only through the preset; if the buttons are not obvious, stop and look at the *Website* tab of the domain before improvising. A `www` CNAME cannot coexist with other `www` records, so delete the old one before adding the new one. Leave every other record alone. *Done: the apex A set is exactly the four GitHub addresses and `www` is the new CNAME.*
+- [x] **Add four A records** for `@`:
 
   | Type | Host | Value |
   |---|---|---|
@@ -114,7 +132,7 @@ In Squarespace DNS:
   | A | `@` | `185.199.110.153` |
   | A | `@` | `185.199.111.153` |
 
-- [ ] **Add four AAAA records** for `@` (recommended by GitHub):
+- [x] **Add four AAAA records** for `@` (recommended by GitHub):
 
   | Type | Host | Value |
   |---|---|---|
@@ -123,16 +141,16 @@ In Squarespace DNS:
   | AAAA | `@` | `2606:50c0:8002::153` |
   | AAAA | `@` | `2606:50c0:8003::153` |
 
-- [ ] **Add one CNAME** for `www`:
+- [x] **Add one CNAME** for `www`:
 
   | Type | Host | Value |
   |---|---|---|
   | CNAME | `www` | `zastras.github.io.` |
 
   The target is the organisation's Pages domain **without the repository name**, and not the `*.pages.github.io` address shown in the settings. Never point `www` at the apex.
-- [ ] On each of the nine new records, set the **TTL to 300 seconds** if the form allows it (the default for custom records is 4 hours). Leave *Priority* as it is (not used for A, AAAA or CNAME).
-- [ ] Do **not** add wildcard (`*`) records. GitHub advises against them because they invite domain takeover.
-- [ ] Confirm the records resolve (allow time to propagate):
+- [x] On each of the nine new records, set the **TTL to 300 seconds** if the form allows it (the default for custom records is 4 hours). Leave *Priority* as it is (not used for A, AAAA or CNAME). *Done: all nine show 300 on 24 November 2026.*
+- [x] Do **not** add wildcard (`*`) records. GitHub advises against them because they invite domain takeover. *Verified: a random subdomain does not resolve.*
+- [x] Confirm the records resolve (allow time to propagate):
 
   ```bash
   dig +noall +answer zastras.uk A        # four 185.199.10x.153 addresses
@@ -140,31 +158,31 @@ In Squarespace DNS:
   dig +noall +answer www.zastras.uk      # zastras.github.io. then GitHub addresses
   ```
 
-- [ ] Run the verifier, which checks the web records, the preserved mail records, HTTPS, redirects and the pages in one go (re-run until it is clean; DNS can lag for up to a TTL):
+- [x] Run the verifier, which checks the web records, the preserved mail records, HTTPS, redirects and the pages in one go (re-run until it is clean; DNS can lag for up to a TTL): *Run on 24 November 2026: no problems.*
 
   ```bash
   node scripts/verify-cutover.mjs --after
   ```
 
-- [ ] **Email still intact:** the verifier checks MX, SPF, DKIM and the name servers; also re-run the lookups from Section B if you want to see them yourself. They must match the "before" output exactly. Send a test email to the domain from outside, and one from it, and confirm both arrive.
+- [ ] **Email still intact:** the verifier checks MX, SPF, DKIM and the name servers; also re-run the lookups from Section B if you want to see them yourself. They must match the "before" output exactly. Send a test email to the domain from outside, and one from it, and confirm both arrive. *Records checked on 24 November 2026 (the verifier reports MX, SPF, DKIM and the name servers unchanged). The real inbound and outbound test emails have not been sent yet.*
 
 ## E. Enable and check HTTPS
 
-- [ ] In *Settings, Pages*, wait for the green **DNS check successful** message. GitHub then provisions a certificate; this can take from minutes up to about a day.
-- [ ] Tick **Enforce HTTPS** as soon as it becomes available.
-- [ ] Check the certificate: open `https://zastras.uk` and confirm the padlock, the certificate covers `zastras.uk`, and there are no mixed-content warnings (the page requests nothing from other hosts, so there should be none).
-- [ ] `http://zastras.uk` and `http://www.zastras.uk` both redirect to `https://zastras.uk`.
+- [x] In *Settings, Pages*, wait for the green **DNS check successful** message. GitHub then provisions a certificate; this can take from minutes up to about a day. *Done: certificate approved for `zastras.uk` and `www.zastras.uk`, expires 22 February 2027.*
+- [x] Tick **Enforce HTTPS** as soon as it becomes available. *Done on 24 November 2026.*
+- [x] Check the certificate: open `https://zastras.uk` and confirm the padlock, the certificate covers `zastras.uk`, and there are no mixed-content warnings (the page requests nothing from other hosts, so there should be none). *Verified from outside: the page answers over HTTPS with a valid certificate and requests nothing from other hosts.*
+- [x] `http://zastras.uk` and `http://www.zastras.uk` both redirect to `https://zastras.uk`. *Verified (301).*
 
 ## F. Check everything after the switch
 
 Use a private window or `curl`, so you see what a new visitor sees.
 
-- [ ] **Apex:** `https://zastras.uk` loads the new site, not the Squarespace page.
-- [ ] **www redirect:** `curl -sI https://www.zastras.uk | head` shows a `301` to `https://zastras.uk/`.
+- [x] **Apex:** `https://zastras.uk` loads the new site, not the Squarespace page. *Verified.*
+- [x] **www redirect:** `curl -sI https://www.zastras.uk | head` shows a `301` to `https://zastras.uk/`. *Verified.*
 - [ ] **Internal links:** every item in the header and footer navigation scrolls to the right section; the privacy link works from the home page and the privacy page links back; the "Discuss a workflow" and "How we work" buttons work. Run `node scripts/check-site.mjs --external` for a mechanical pass.
-- [ ] **Images and fonts:** nothing 404s (browser developer tools, Network tab); the logo, both team images and the fonts load; `https://zastras.uk/favicon.ico` and `https://zastras.uk/assets/img/og-image.png` return 200.
+- [ ] **Images and fonts:** nothing 404s (browser developer tools, Network tab); the logo, both team images and the fonts load; `https://zastras.uk/favicon.ico` and `https://zastras.uk/assets/img/og-image.png` return 200. *Partly checked: the verifier fetched the stylesheet, script, font, the team images, `favicon.ico` and `og-image.png` and all returned 200. The browser Network-tab pass is still to do.*
 - [ ] **Metadata:** view source on both pages: titles, descriptions, canonical URLs (`https://zastras.uk/` and `https://zastras.uk/privacy/`) and Open Graph tags are correct. Paste the URL into the LinkedIn Post Inspector or a messaging app to confirm the share card shows the Open Graph image.
-- [ ] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the two pages on `zastras.uk`.
+- [x] **`robots.txt` and `sitemap.xml`:** `https://zastras.uk/robots.txt` and `https://zastras.uk/sitemap.xml` load and list the two pages on `zastras.uk`. *Verified on 24 November 2026: both load and the sitemap lists the two pages.*
 - [ ] **Contact form, on the live domain:** send one clearly labelled test enquiry. Confirm it appears in the Formspree dashboard **and** arrives in the notification inbox. Then, in Formspree, set **Restrict to Domain** to `zastras.uk` (no `www`) and send a second labelled test to confirm it still arrives and is not in the spam tab.
 - [ ] **Privacy notice** reads correctly on the live site and its legal footer matches Companies House.
 - [ ] **Email:** repeat the inbound and outbound test emails from Section D.
@@ -189,7 +207,7 @@ If something is wrong and cannot be fixed quickly:
 3. Leave MX, SPF, DKIM and the GitHub verification TXT record alone: they were never changed.
 4. Optionally remove the custom domain in the repository's Pages settings.
 
-Lowering TTLs beforehand (Section B) makes this take effect in minutes rather than hours.
+The new records already have a 300 second TTL, so deleting them takes effect within about five minutes for resolvers that have cached them. Records restored in step 2 come back at the 4 hour TTL, so visitors may see the old answer for up to 4 hours.
 
 ## After launch: related tidy-ups (separate from the cutover)
 
