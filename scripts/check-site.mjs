@@ -2,28 +2,46 @@
 /**
  * Checks for the static site in ./site. Node 18+, no dependencies.
  *
- *   node scripts/check-site.mjs                 structure, links, metadata, form and legal-text checks
+ *   node scripts/check-site.mjs                 every check below; this is what CI runs
  *   node scripts/check-site.mjs --external      also request every external link (needs network)
- *   node scripts/check-site.mjs --production    also fail on anything that must not ship: noindex tags,
- *                                               "owner decision" boxes, bracketed placeholders, draft banners
+ *   node scripts/check-site.mjs --root <dir>    check a copy of the site (used by scripts/check-site.test.mjs)
+ *
+ * The site is published, so there is no draft mode: the checks always fail if a public page carries a
+ * robots directive that blocks indexing, a draft banner, an owner-decision box or an unresolved placeholder.
+ * (Older instructions mention a --production flag. It is no longer needed; it is simply ignored.)
  *
  * It is deliberately small. It catches the mistakes that are easy to make when editing by hand
- * (broken links and anchors, missing alt text, a changed form endpoint, a dropped legal line) and
- * does not try to replace a browser or a screen reader. See docs/REVIEW.md for what was checked by hand.
+ * (broken links and anchors, missing alt text, a changed form endpoint, a dropped legal line, a page that
+ * quietly becomes un-indexable, a canonical URL that disagrees with the sitemap, JSON-LD that no longer
+ * parses) and does not try to replace a browser or a screen reader. See docs/REVIEW.md for what was
+ * checked by hand, and scripts/verify-live.mjs for the same questions asked of the deployed site.
  */
-import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync, openSync, readSync, closeSync } from "node:fs";
 import { join, dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "site");
+const argv = process.argv.slice(2);
+const rootArg = argv.indexOf("--root");
+const ROOT = rootArg >= 0 ? resolve(argv[rootArg + 1]) : resolve(dirname(fileURLToPath(import.meta.url)), "..", "site");
 const ORIGIN = "https://zastras.uk";
 const FORM_ENDPOINT = "https://formspree.io/f/maeolban";
 const LEGAL_TEXT =
   "Zastras Accelerate is a service of ZASTRAS LTD. Registered in Scotland. Company number SC832156. Registered office: 48 West George Street, 2nd Floor, Glasgow, Scotland, G2 1BP.";
 
-const args = new Set(process.argv.slice(2));
-const PRODUCTION = args.has("--production");
-const EXTERNAL = args.has("--external");
+const EXTERNAL = argv.includes("--external");
+
+/* Policy, written down so a change to it is a deliberate edit rather than an accident. */
+// robots directives that stop a page being indexed, followed, or shown with a snippet
+const BLOCKING_DIRECTIVE = /(^|[\s,])(noindex|none|nofollow|nosnippet|unavailable_after[^,]*)(?=$|[\s,])/i;
+// the only structured-data types the site uses. LocalBusiness and its subtypes are left out on purpose:
+// the registered office is a company detail, not premises the public can visit.
+const LD_TYPES = new Set(["Organization", "WebSite", "WebPage", "Service", "BreadcrumbList", "ListItem"]);
+// properties that would state something the business has not published and could not support
+const LD_FORBIDDEN = ["aggregateRating", "review", "reviews", "openingHours", "openingHoursSpecification", "priceRange", "telephone", "geo", "hasMap", "address"];
+// a page that promises "no third-party resources" must not load any, and these are the usual ways of adding them
+const TRACKERS = /googletagmanager|google-analytics|googleadservices|gtag\(|fbq\(|doubleclick|fonts\.googleapis|fonts\.gstatic|hotjar|clarity\.ms|plausible\.io|segment\.com\/analytics/i;
+// hosts that must never appear in the site: the preferred origin is https://zastras.uk
+const WRONG_ORIGINS = /http:\/\/(www\.)?zastras\.uk|https:\/\/www\.zastras\.uk|zastras\.github\.io/i;
 
 const failures = [];
 const warnings = [];
@@ -40,7 +58,8 @@ function walk(dir) {
 const rel = (p) => relative(ROOT, p).split(sep).join("/");
 const decode = (s) =>
   s.replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lsquo;|&rsquo;/g, "'").replace(/&ldquo;|&rdquo;/g, '"')
-    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&pound;/g, "£").replace(/&ndash;/g, "–").replace(/&mdash;/g, "—");
 const textOf = (html) => decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<!--[\s\S]*?-->/g, " ").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 
 function attrsOf(tagSource) {
@@ -54,6 +73,32 @@ function tags(html, name) {
   const re = new RegExp(`<${name}\\b([^>]*)>`, "gi");
   return [...html.matchAll(re)].map((m) => ({ attrs: attrsOf(m[1]), source: m[0] }));
 }
+
+function pngSize(file) {
+  const fd = openSync(file, "r");
+  try {
+    const buf = Buffer.alloc(24);
+    readSync(fd, buf, 0, 24, 0);
+    return buf.toString("ascii", 1, 4) === "PNG" ? { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) } : null;
+  } finally { closeSync(fd); }
+}
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+/** "24 November 2026" -> Date, or null if it is not a real date. */
+function parseLongDate(text) {
+  const m = text.match(/^(\d{1,2}) ([A-Za-z]+) (\d{4})$/);
+  const month = m && MONTHS.indexOf(m[2].toLowerCase());
+  if (!m || month < 0) return null;
+  const d = new Date(Date.UTC(+m[3], month, +m[1]));
+  return d.getUTCDate() === +m[1] ? d : null;
+}
+const endOfTodayUtc = () => { const n = new Date(); return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + 1) - 1; };
+
+/** Every schema.org node in a parsed JSON-LD value, flattening @graph. */
+const ldNodes = (v) => (Array.isArray(v) ? v.flatMap(ldNodes) : v && typeof v === "object" ? [v, ...(v["@graph"] ? ldNodes(v["@graph"]) : [])] : []);
+const ldWalk = function* (v) {
+  if (Array.isArray(v)) for (const x of v) yield* ldWalk(x);
+  else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) { yield [k, x]; yield* ldWalk(x); }
+};
 
 /** Where does a local URL, written in `fromFile`, point on disk? */
 function resolveLocal(fromFile, url) {
@@ -69,6 +114,8 @@ const files = walk(ROOT);
 const pages = files.filter((f) => f.endsWith(".html"));
 const idsByPage = new Map();
 const externalLinks = new Map();
+const pageInfo = new Map();   // file -> { name, canonical, noindex, isNotFoundPage, title, description, h1 }
+const linksFrom = new Map();  // file -> Set of page files it links to
 
 for (const file of pages) {
   const name = rel(file);
@@ -101,11 +148,13 @@ for (const file of pages) {
     if (!desc) fail(name, "missing meta description");
     else if (desc.length < 70 || desc.length > 180) warn(name, `meta description is ${desc.length} characters; 70 to 180 reads best in search results`);
 
-    const canonical = tags(html, "link").find((t) => t.attrs.rel === "canonical")?.attrs.href;
-    if (!canonical) fail(name, "missing canonical link");
+    const canonicals = tags(html, "link").filter((t) => t.attrs.rel === "canonical");
+    const canonical = canonicals[0]?.attrs.href;
+    if (canonicals.length !== 1) fail(name, `expected exactly one canonical link, found ${canonicals.length}`);
     else {
       const expectedPath = name === "index.html" ? "/" : "/" + name.replace(/index\.html$/, "");
       if (canonical !== ORIGIN + expectedPath) fail(name, `canonical is ${canonical}, expected ${ORIGIN + expectedPath}`);
+      if (meta("og:url", "property") !== canonical) fail(name, `og:url (${meta("og:url", "property")}) must equal the canonical URL (${canonical})`);
     }
     for (const key of ["og:title", "og:description", "og:url", "og:image", "og:type"]) {
       if (!meta(key, "property")) fail(name, `missing ${key}`);
@@ -115,20 +164,36 @@ for (const file of pages) {
     if (og) {
       if (!og.startsWith(ORIGIN + "/")) fail(name, `og:image should be an absolute ${ORIGIN} URL`);
       else if (!existsSync(join(ROOT, og.slice(ORIGIN.length)))) fail(name, `og:image file not found in site/: ${og}`);
+      else {
+        const size = pngSize(join(ROOT, og.slice(ORIGIN.length)));
+        const [w, h] = [meta("og:image:width", "property"), meta("og:image:height", "property")];
+        if (size && (String(size.width) !== w || String(size.height) !== h)) fail(name, `og:image is ${size.width}x${size.height} but og:image:width/height say ${w}x${h}`);
+        if (size && (size.width < 1200 || size.height < 630)) warn(name, `og:image is ${size.width}x${size.height}; 1200x630 is the usual size for large share cards`);
+      }
     }
     if (!tags(html, "link").some((t) => (t.attrs.rel || "").includes("icon"))) fail(name, "missing favicon link");
   }
 
-  /* indexing state */
-  const robots = meta("robots") || "";
-  const noindex = /noindex/i.test(robots);
-  if (PRODUCTION && noindex && !isNotFoundPage) fail(name, "noindex is still set (remove the PREVIEW-NOINDEX line before launch)");
-  if (!PRODUCTION && !noindex && !isNotFoundPage) warn(name, "no noindex tag: this page would be indexed if deployed");
+  /* indexing state: public pages must be indexable and followable; only the 404 page is kept out */
+  const robotsDirectives = metas
+    .filter((t) => ["robots", "googlebot", "bingbot"].includes((t.attrs.name || "").toLowerCase()))
+    .map((t) => t.attrs.content || "").join(",");
+  const noindex = /noindex|(^|[\s,])none(?=$|[\s,])/i.test(robotsDirectives);
+  if (metas.some((t) => (t.attrs["http-equiv"] || "").toLowerCase() === "x-robots-tag")) fail(name, 'http-equiv="X-Robots-Tag" is not a supported way to set robots rules; remove it');
+  if (isNotFoundPage) {
+    if (!noindex) fail(name, 'the 404 page must keep <meta name="robots" content="noindex">: it is served for addresses that do not exist');
+  } else if (BLOCKING_DIRECTIVE.test(robotsDirectives)) {
+    fail(name, `robots meta (${robotsDirectives}) blocks indexing, following links or snippets on a public page`);
+  }
+  if (/PREVIEW-NOINDEX/.test(raw)) fail(name, "PREVIEW-NOINDEX marker comment is still present");
 
   /* headings */
   const headings = [...noScript.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => ({ level: +m[1], text: textOf(m[2]) }));
   const h1s = headings.filter((h) => h.level === 1);
   if (h1s.length !== 1) fail(name, `expected exactly one <h1>, found ${h1s.length}`);
+  const canonicalHref = tags(html, "link").find((t) => t.attrs.rel === "canonical")?.attrs.href;
+  pageInfo.set(file, { name, canonical: canonicalHref, noindex, isNotFoundPage, title, description: meta("description"), h1: h1s[0]?.text });
+  linksFrom.set(file, new Set());
   let last = 0;
   for (const h of headings) {
     if (last && h.level > last + 1) fail(name, `heading level jumps from h${last} to h${h.level} at "${h.text}"`);
@@ -162,9 +227,12 @@ for (const file of pages) {
     }
   }
 
-  for (const { tag, url } of refs) {
+  for (const { tag, url, attrs } of refs) {
+    if (tag === "a" && (url.trim() === "" || url === "#" || /^javascript:/i.test(url))) fail(name, `<a href="${url}"> is not a crawlable link`);
     if (/^(mailto:|tel:|javascript:|data:)/i.test(url)) continue;
+    if (WRONG_ORIGINS.test(url)) fail(name, `${tag} points at a non-preferred origin: ${url} (use ${ORIGIN} or a relative path)`);
     if (/^https?:\/\//i.test(url)) {
+      if (!url.startsWith(ORIGIN) && tag !== "a") fail(name, `${tag} loads a third-party resource: ${url} (the privacy notice says the site loads none)`);
       if (!url.startsWith(ORIGIN)) {
         const set = externalLinks.get(url) || new Set();
         set.add(name);
@@ -181,6 +249,12 @@ for (const file of pages) {
     if (!existsSync(target)) {
       fail(name, `${tag} points to missing file: ${url}`);
       continue;
+    }
+    if (tag === "a") {
+      const path = url.split("#")[0].split("?")[0];
+      if (/(^|\/)index\.html$/.test(path)) fail(name, `link "${url}" names index.html; link to the directory ("${path.replace(/index\.html$/, "") || "./"}") so there is one URL per page`);
+      else if (path && !path.endsWith("/") && statSync(resolve(dirname(file), path)).isDirectory()) fail(name, `link "${url}" lacks the trailing slash, so it would redirect`);
+      if (target.endsWith(".html") && target !== file) linksFrom.get(file).add(target);
     }
     const fragment = url.split("#")[1];
     if (fragment && target.endsWith(".html")) {
@@ -226,22 +300,76 @@ for (const file of pages) {
   /* legal footer */
   if (!isNotFoundPage && !textOf(noScript).includes(LEGAL_TEXT)) fail(name, "legal footer text is missing or has been altered");
 
-  /* things that must not ship */
-  const bodyText = textOf(noScript);
-  const hasOwnerBoxes = /class="owner-decision"/.test(noScript);
-  const hasDraftBanner = /class="draft-banner"/.test(noScript);
-  const placeholders = [...bodyText.matchAll(/\[[^\]]*(to be|to follow|TBC|publication date)[^\]]*\]/gi)].map((m) => m[0]);
-  if (PRODUCTION) {
-    if (hasOwnerBoxes) fail(name, "owner-decision boxes are still present");
-    if (hasDraftBanner) fail(name, "draft banner is still present");
-    for (const p of placeholders) fail(name, `unresolved placeholder ${p}`);
-    if (/PREVIEW-NOINDEX/.test(raw)) fail(name, "PREVIEW-NOINDEX marker comment is still present");
-    if (/Photograph to follow|photograph of .* to follow/i.test(raw)) warn(name, "a placeholder photograph is still in use");
-  } else {
-    if (hasOwnerBoxes) warn(name, "owner-decision boxes present (expected in draft; blocked by --production)");
-    for (const p of placeholders) warn(name, `placeholder ${p} (expected in draft; blocked by --production)`);
+  /* structured data */
+  const ldScripts = [...raw.matchAll(/<script\b[^>]*type\s*=\s*"application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)].map((m) => m[1]);
+  const ldNodesOnPage = [];
+  for (const [i, src] of ldScripts.entries()) {
+    let data;
+    try { data = JSON.parse(src); } catch (e) { fail(name, `JSON-LD block ${i + 1} does not parse: ${e.message}`); continue; }
+    if (data["@context"] !== "https://schema.org") fail(name, `JSON-LD block ${i + 1} must have "@context": "https://schema.org"`);
+    for (const node of ldNodes(data)) {
+      ldNodesOnPage.push(node);
+      const types = [].concat(node["@type"] ?? []);
+      if (!types.length && !node["@graph"]) fail(name, "a JSON-LD node has no @type");
+      for (const t of types) if (!LD_TYPES.has(t)) fail(name, `JSON-LD type "${t}" is not on the approved list (${[...LD_TYPES].join(", ")}); see LD_TYPES in this script`);
+    }
+    for (const [key, value] of ldWalk(data)) {
+      if (LD_FORBIDDEN.includes(key)) fail(name, `JSON-LD declares "${key}", which the site does not publish`);
+      if (typeof value === "string" && /^https?:\/\//.test(value) && key !== "@context") {
+        if (!value.startsWith(ORIGIN + "/")) fail(name, `JSON-LD ${key} points outside ${ORIGIN}: ${value}`);
+        else if (/\.(png|svg|jpe?g|webp)$/.test(value) && !existsSync(join(ROOT, value.slice(ORIGIN.length)))) fail(name, `JSON-LD ${key} file does not exist: ${value}`);
+      }
+    }
+  }
+  const visible = textOf(noScript);
+  for (const node of ldNodesOnPage) {
+    const types = [].concat(node["@type"] ?? []);
+    if (types.includes("Organization")) {
+      for (const key of ["name", "legalName", "url", "logo", "description"]) if (!node[key]) fail(name, `Organization JSON-LD is missing "${key}"`);
+      if (node.url !== ORIGIN + "/") fail(name, `Organization url should be ${ORIGIN}/, not ${node.url}`);
+      for (const key of ["name", "legalName"]) if (node[key] && !visible.includes(node[key])) fail(name, `Organization ${key} "${node[key]}" does not appear on the page`);
+    }
+    if (types.includes("Service")) {
+      if (node.url !== pageInfo.get(file).canonical) fail(name, `Service url (${node.url}) must equal the canonical URL`);
+      if (!node.description || !visible.includes(node.description)) fail(name, "Service description must appear, word for word, in the visible page text");
+      if (!node.name || !headings.some((h) => h.text === node.name)) fail(name, `Service name "${node.name}" must match a heading on the page`);
+    }
+  }
+  if (name === "index.html" && !ldNodesOnPage.some((n) => [].concat(n["@type"]).includes("Organization"))) fail(name, "the home page needs Organization JSON-LD");
+
+  /* dates: a "Last updated" line must hold a real date that is not in the future */
+  for (const m of noScript.matchAll(/Last updated:\s*([^<]*)</g)) {
+    const date = parseLongDate(decode(m[1]).trim());
+    if (!date) fail(name, `"Last updated: ${m[1].trim()}" is not a date such as "24 November 2026"`);
+    else if (+date > endOfTodayUtc()) fail(name, `"Last updated" is in the future: ${m[1].trim()}`);
+  }
+
+  /* things that must not ship: always enforced, because the site is published */
+  const bodyText = visible;
+  const placeholders = [...bodyText.matchAll(/\[[^\]]*(to be|to follow|TBC|publication date)[^\]]*\]|\b(TODO|FIXME|lorem ipsum)\b/gi)].map((m) => m[0]);
+  if (/class="owner-decision"/.test(noScript)) fail(name, "owner-decision boxes are still present");
+  if (/class="draft-banner"/.test(noScript)) fail(name, "draft banner is still present");
+  for (const p of placeholders) fail(name, `unresolved placeholder ${p}`);
+  if (/Photograph to follow|photograph of .* to follow/i.test(raw)) warn(name, "a placeholder photograph is still in use");
+}
+
+/* ------------------------------------------------- site-wide: duplicates and reachability */
+const publicPages = [...pageInfo.entries()].filter(([, i]) => !i.isNotFoundPage);
+for (const field of ["title", "description", "h1", "canonical"]) {
+  const seenValues = new Map();
+  for (const [, info] of publicPages) {
+    const v = info[field];
+    if (!v) continue;
+    if (seenValues.has(v)) fail(info.name, `${field} duplicates ${seenValues.get(v)}: "${v}"`);
+    else seenValues.set(v, info.name);
   }
 }
+const home = join(ROOT, "index.html");
+const reached = new Set([home]);
+for (const queue = [home]; queue.length; ) {
+  for (const next of linksFrom.get(queue.shift()) ?? []) if (!reached.has(next)) { reached.add(next); queue.push(next); }
+}
+for (const [file, info] of publicPages) if (!reached.has(file)) fail(info.name, "no crawlable link path from the home page reaches this page (orphan)");
 
 /* ---------------------------------------------------------- site-wide files */
 const textFiles = files.filter((f) => /\.(html|css|js|xml|txt|svg)$/.test(f) && !f.includes(`${sep}fonts${sep}`));
@@ -251,20 +379,51 @@ for (const f of textFiles) {
   for (const m of t.matchAll(/https?:\/\/formspree\.io\/[^\s"')]+/g)) {
     if (m[0] !== FORM_ENDPOINT && !/formspree\.io\/legal\/privacy-policy$/.test(m[0])) fail(rel(f), `unexpected Formspree URL ${m[0]}`);
   }
+  if (TRACKERS.test(t)) fail(rel(f), `mentions an analytics, advertising or third-party font service (${t.match(TRACKERS)[0]}); the privacy notice says there are none`);
+  if (WRONG_ORIGINS.test(t)) fail(rel(f), `mentions a non-preferred origin (${t.match(WRONG_ORIGINS)[0]}); use ${ORIGIN}`);
+  if (/\.css$/.test(f) && /@import|url\(\s*["']?(https?:)?\/\//i.test(t)) fail(rel(f), "CSS loads a resource from another host");
+  if (/(^|\/)_headers$|\.htaccess$/.test(f)) warn(rel(f), "GitHub Pages ignores this file; robots rules cannot be set with headers here");
+  if (/x-robots-tag/i.test(t)) fail(rel(f), "mentions X-Robots-Tag, which GitHub Pages cannot send; use a robots meta tag");
 }
 
+/* sitemap: only live, canonical, indexable pages, in the preferred form, each once */
 const sitemap = readFileSync(join(ROOT, "sitemap.xml"), "utf8");
-for (const m of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
-  const u = new URL(m[1]);
+const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+const inSitemap = new Set();
+for (const loc of sitemapUrls) {
+  if (inSitemap.has(loc)) fail("sitemap.xml", `${loc} is listed twice`);
+  inSitemap.add(loc);
+  let u;
+  try { u = new URL(loc); } catch { fail("sitemap.xml", `${loc} is not an absolute URL`); continue; }
+  if (u.origin !== ORIGIN) { fail("sitemap.xml", `${loc} is not on ${ORIGIN}`); continue; }
+  if (u.search || u.hash) fail("sitemap.xml", `${loc} has a query string or fragment`);
+  if (!u.pathname.endsWith("/") && !/\.[a-z0-9]+$/i.test(u.pathname)) fail("sitemap.xml", `${loc} is missing its trailing slash`);
   const local = join(ROOT, u.pathname.endsWith("/") ? u.pathname + "index.html" : u.pathname);
-  if (u.origin !== ORIGIN) fail("sitemap.xml", `${m[1]} is not on ${ORIGIN}`);
-  else if (!existsSync(local)) fail("sitemap.xml", `${m[1]} does not exist in site/`);
+  if (!existsSync(local)) { fail("sitemap.xml", `${loc} does not exist in site/`); continue; }
+  const info = pageInfo.get(local);
+  if (!info) fail("sitemap.xml", `${loc} is not an HTML page`);
+  else if (info.isNotFoundPage || info.noindex) fail("sitemap.xml", `${loc} is a noindex page and must not be listed`);
+  else if (info.canonical !== loc) fail("sitemap.xml", `${loc} is listed, but the page's canonical URL is ${info.canonical}`);
 }
-for (const page of pages.filter((p) => rel(p) !== "404.html")) {
-  const url = ORIGIN + "/" + rel(page).replace(/index\.html$/, "");
-  if (!sitemap.includes(`<loc>${url}</loc>`)) fail("sitemap.xml", `${url} is missing from the sitemap`);
+for (const [, info] of publicPages) {
+  if (info.canonical && !inSitemap.has(info.canonical)) fail("sitemap.xml", `${info.canonical} is missing from the sitemap`);
 }
-if (!/Sitemap:\s*https:\/\/zastras\.uk\/sitemap\.xml/.test(readFileSync(join(ROOT, "robots.txt"), "utf8"))) fail("robots.txt", "does not point at the sitemap");
+for (const m of sitemap.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) {
+  if (!/^\d{4}-\d{2}-\d{2}(T[\d:.]+(Z|[+-]\d{2}:\d{2}))?$/.test(m[1]) || isNaN(Date.parse(m[1]))) fail("sitemap.xml", `<lastmod>${m[1]}</lastmod> is not a W3C date`);
+  else if (Date.parse(m[1]) > endOfTodayUtc()) fail("sitemap.xml", `<lastmod>${m[1]}</lastmod> is in the future`);
+}
+
+/* robots.txt: crawlable, with nothing disallowed, pointing at the sitemap */
+const robotsTxt = readFileSync(join(ROOT, "robots.txt"), "utf8");
+const robotsRules = robotsTxt.split(/\r?\n/).map((l) => l.replace(/#.*/, "").trim()).filter(Boolean);
+if (!robotsRules.some((l) => /^user-agent:\s*\*$/i.test(l))) fail("robots.txt", "needs a 'User-agent: *' group");
+for (const rule of robotsRules.filter((l) => /^disallow:/i.test(l))) {
+  if (rule.replace(/^disallow:\s*/i, "") !== "") fail("robots.txt", `"${rule}" blocks crawling. Do not use robots.txt to keep pages or assets out of search: crawlers must fetch a page to see its noindex tag, and need CSS, JavaScript and images to render it`);
+}
+if (robotsRules.some((l) => /^noindex:/i.test(l))) fail("robots.txt", "a Noindex line is not supported by Google; use a robots meta tag");
+const sitemapLines = robotsRules.filter((l) => /^sitemap:/i.test(l)).map((l) => l.replace(/^sitemap:\s*/i, ""));
+if (sitemapLines.length !== 1 || sitemapLines[0] !== `${ORIGIN}/sitemap.xml`) fail("robots.txt", `must contain exactly one Sitemap line, ${ORIGIN}/sitemap.xml`);
+
 for (const required of ["favicon.ico", "assets/img/favicon.svg", "assets/img/apple-touch-icon.png", "assets/img/og-image.png", ".nojekyll"]) {
   if (!existsSync(join(ROOT, required))) fail(required, "file is missing");
 }
@@ -296,7 +455,7 @@ if (EXTERNAL) {
 }
 
 /* ------------------------------------------------------------------- report */
-console.log(`\nChecked ${pages.length} page(s)${PRODUCTION ? " in production mode" : ""}.`);
+console.log(`\nChecked ${pages.length} page(s): ${publicPages.length} public, ${pages.length - publicPages.length} not-found.`);
 if (warnings.length) { console.log(`\nWarnings (${warnings.length}):`); warnings.forEach((w) => console.log("  - " + w)); }
 if (failures.length) { console.log(`\nFAILED (${failures.length}):`); failures.forEach((f) => console.log("  x " + f)); process.exit(1); }
 console.log("\nAll checks passed.");

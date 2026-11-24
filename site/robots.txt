@@ -1,5 +1,6 @@
-# Crawling is allowed. The preview is kept out of search results by a noindex meta tag in each page;
-# remove that tag at launch (see docs/CUTOVER.md).
+# Everything is crawlable, including CSS, JavaScript and images, so pages can be rendered as visitors see them.
+# Do not use Disallow to keep a page out of search results: a crawler has to fetch a page to see its noindex tag.
+# Only 404.html carries one, and it is served only for addresses that do not exist.
 User-agent: *
 Allow: /
 

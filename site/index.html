@@ -3,12 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zastras Accelerate | Accelerate with AI</title>
-  <meta name="description" content="Accelerate with AI. We help you improve one workflow at a time, with the review steps and safeguards to use AI well.">
+  <title>AI consultancy for one workflow at a time | Zastras Accelerate</title>
+  <meta name="description" content="We help firms find useful uses for AI and improve one workflow at a time: a process review, a tested pilot and training, with a person reviewing what matters.">
   <link rel="canonical" href="https://zastras.uk/">
-
-  <!-- PREVIEW-NOINDEX: temporary. Delete this line (and its twin in privacy/index.html) at launch. See docs/CUTOVER.md. -->
-  <meta name="robots" content="noindex, nofollow">
 
   <!-- Formspree's "Restrict to Domain" relies on the Referer header, so do not tighten this policy. -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -33,15 +30,30 @@
   <meta name="twitter:description" content="Accelerate with AI. One workflow at a time, with the safeguards to use AI well.">
   <meta name="twitter:image" content="https://zastras.uk/assets/img/og-image.png">
 
+  <!-- Organization, not LocalBusiness or ProfessionalService: the registered office is a company detail, not a place
+       the public can visit, so no address, opening hours or contact point is declared. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Zastras Accelerate",
-    "legalName": "ZASTRAS LTD",
-    "url": "https://zastras.uk/",
-    "logo": "https://zastras.uk/assets/img/logo-mark-512.png",
-    "description": "Consultancy helping firms accelerate their use of AI, one workflow at a time."
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://zastras.uk/#organization",
+        "name": "Zastras Accelerate",
+        "legalName": "ZASTRAS LTD",
+        "url": "https://zastras.uk/",
+        "logo": "https://zastras.uk/assets/img/logo-mark-512.png",
+        "description": "Consultancy helping firms accelerate their use of AI, one workflow at a time."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://zastras.uk/#website",
+        "name": "Zastras Accelerate",
+        "url": "https://zastras.uk/",
+        "inLanguage": "en-GB",
+        "publisher": { "@id": "https://zastras.uk/#organization" }
+      }
+    ]
   }
   </script>
 
@@ -270,6 +282,7 @@
             <p class="service__num">01</p>
             <h3>Process review</h3>
             <p>We work to understand one real workflow: how often it happens, how long it takes, which tools and information it uses, what goes wrong and who approves the result.</p>
+            <p class="service__more"><a href="process-review/">How a process review works</a></p>
             <div class="service__out">
               <p class="label">You get</p>
               <p>A focused recommendation and a pilot scope.</p>
@@ -279,6 +292,7 @@
             <p class="service__num">02</p>
             <h3>One-workflow pilot</h3>
             <p>We configure and test an improvement against representative normal and difficult examples. People stay in control of important outputs, and we compare the pilot with the original process.</p>
+            <p class="service__more"><a href="one-workflow-pilot/">How a one-workflow pilot works</a></p>
             <div class="service__out">
               <p class="label">You get</p>
               <p>A tested workflow, compared with how you work today.</p>
@@ -288,6 +302,7 @@
             <p class="service__num">03</p>
             <h3>Training and ongoing care</h3>
             <p>We help your staff use the workflow, review exceptions and failures, track adoption and adjust the process as the business changes.</p>
+            <p class="service__more"><a href="retainer/">Retainer terms for ongoing care</a></p>
             <div class="service__out">
               <p class="label">You get</p>
               <p>A team that can use, check and adjust it.</p>
@@ -510,7 +525,7 @@
             <p class="price__num">01</p>
             <h3>Process review</h3>
             <p class="price__amount"><span aria-hidden="true">£500–£750</span><span class="visually-hidden">£500 to £750</span><span class="price__unit">One-off</span></p>
-            <p>A focused look at one workflow, ending in a recommendation and a scope for a pilot. You can stop here.</p>
+            <p>A focused look at one workflow, ending in a recommendation and a scope for a pilot. You can stop here. <a href="process-review/">See what a process review involves</a>.</p>
             <div class="price__foot">
               <p class="label">What sets the price</p>
               <p>How many people, tools and exceptions the workflow involves.</p>
@@ -521,7 +536,7 @@
             <p class="price__num">02</p>
             <h3>One-workflow pilot</h3>
             <p class="price__amount"><span aria-hidden="true">£2,000–£5,000</span><span class="visually-hidden">£2,000 to £5,000</span><span class="price__unit">One-off, tightly scoped</span></p>
-            <p>One workflow, configured and tested on real examples, with a person checking what matters, and compared with how you work today.</p>
+            <p>One workflow, configured and tested on real examples, with a person checking what matters, and compared with how you work today. <a href="one-workflow-pilot/">See what a pilot involves</a>.</p>
             <div class="price__foot">
               <p class="label">What sets the price</p>
               <p>The scope we agree after the review. We keep it tight so the result can be tested, understood and trusted.</p>
@@ -651,6 +666,8 @@
             <li><a href="#team">Team</a></li>
             <li><a href="#costs">Costs</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="process-review/">Process review</a></li>
+            <li><a href="one-workflow-pilot/">One-workflow pilot</a></li>
             <li><a href="retainer/">Retainer terms</a></li>
             <li><a href="privacy/">Privacy notice</a></li>
           </ul>
