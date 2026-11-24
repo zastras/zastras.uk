@@ -95,7 +95,7 @@ if (AFTER) {
   http.error ? warn(`http://${DOMAIN}/ failed: ${http.error}`) : (http.status === 301 && (http.headers.get("location") || "").startsWith("https://")) ? ok("http redirects to https") : bad(`http should redirect to https; got ${http.status} ${http.headers.get("location") || ""} (is Enforce HTTPS ticked?)`);
 
   console.log("\nPages and assets");
-  for (const [path, type] of [["privacy/", "text/html"], ["robots.txt", "text/plain"], ["sitemap.xml", "xml"], ["assets/img/og-image.png", "image/png"], ["favicon.ico", "icon"], ["assets/css/main.css", "text/css"], ["assets/js/main.js", "javascript"], ["assets/fonts/geist-latin-wght.woff2", "font/woff2"], ["assets/img/team/lex-sobrinho-1200.webp", "image/webp"], ["assets/img/team/applied-ai-specialist.svg", "svg"]]) {
+  for (const [path, type] of [["privacy/", "text/html"], ["robots.txt", "text/plain"], ["sitemap.xml", "xml"], ["assets/img/og-image.png", "image/png"], ["favicon.ico", "icon"], ["assets/css/main.css", "text/css"], ["assets/js/main.js", "javascript"], ["assets/fonts/geist-latin-wght.woff2", "font/woff2"], ["assets/img/team/lex-sobrinho-1200.webp", "image/webp"], ["assets/img/team/applied-ai-specialist-1200.webp", "image/webp"]]) {
     const r = await get(`https://${DOMAIN}/${path}`, { redirect: "follow" });
     r.error ? bad(`/${path}: ${r.error}`) : r.status === 200 && (r.headers.get("content-type") || "").includes(type.replace("icon", "icon").replace("xml", "xml")) ? ok(`/${path} 200 ${r.headers.get("content-type")}`) : bad(`/${path}: ${r.status} ${r.headers.get("content-type")}`);
   }
