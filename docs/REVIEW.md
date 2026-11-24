@@ -129,6 +129,20 @@ Prepared on the branch that removes `noindex`. Nothing here is a ranking promise
 
 The mobile figures are slightly higher locally than live because the local server does not compress responses. Nothing here needed fixing: the page has no render-blocking third-party resource, the main font is preloaded and self-hosted with `font-display: swap`, the only photograph is below the fold, lazy-loaded, sized and offered at two widths, and the largest paint is the heading or the opening paragraph. Lighthouse and PageSpeed Insights were not available: the PageSpeed Insights API returned its daily-quota error (429) for an unauthenticated call, and Lighthouse is not installed. There is no real-user (CrUX) data yet for a site this new. Screenshots at 390 px taken with `--window-size` were clipped by headless Chrome's minimum window width; the layout check above used device emulation and found no overflow.
 
+**After the deployment** (pull request 17, merge commit `1fb7e77`, workflow run 45502689943, all four jobs green; checked from outside at 22:48 UTC):
+
+| URL | Status | `X-Robots-Tag` | Robots meta tag in the served HTML |
+|---|---|---|---|
+| `/` | 200 | none | none (before: `noindex, nofollow`) |
+| `/privacy/` | 200 | none | none (before: `noindex, nofollow`; draft banner and `[publication date]` gone, "Last updated: 24 November 2026") |
+| `/retainer/` | 200 | none | none (before: `noindex, nofollow`) |
+| `/process-review/`, `/one-workflow-pilot/` | 200 | none | none (new pages) |
+| `/robots.txt` | 200, `text/plain` | none | not applicable; allows everything, names the sitemap |
+| `/sitemap.xml` | 200, `application/xml` | none | not applicable; lists the five public pages |
+| `/this-page-does-not-exist/` (and without the slash) | 404 | none | `noindex` (intended) |
+
+Redirects are unchanged and single-hop: `http://zastras.uk/`, `http://www.zastras.uk/`, `https://www.zastras.uk/` and `https://zastras.github.io/zastras.uk/` each 301 straight to `https://zastras.uk/`. `scripts/verify-live.mjs` and `scripts/verify-cutover.mjs --after --indexable` both report no problems. The served JSON-LD parses on all five pages (`Organization` and `WebSite` on the home page, `Service` on each service page, none elsewhere). The same scripted Chrome session as above, run against the live site afterwards, gave: mobile LCP 0.56 to 0.68 s, desktop 0.06 to 0.10 s, CLS 0 on all five pages, five or six requests of 69 to 76 KB per page, no cookies, only `zastras.uk` contacted, no console errors, no horizontal overflow at 390 px. The owner's pull request 18 (a photograph on the second team card) was merged a minute after pull request 17 and deployed with it.
+
 **Not verified** (and why):
 
 - **Google's Rich Results Test and the Schema Markup Validator were not run.** The built-in browser refused both addresses. The JSON-LD was checked only by the repository's parser and rules (valid JSON, schema.org context, approved types, no address, hours, rating, review or telephone, URLs on the site, `Service` text present on the page). Run Google's test on the three URLs after deployment.
