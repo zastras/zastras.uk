@@ -2,11 +2,11 @@
 
 Source for the **Zastras Practical AI** website: a one-page site plus a privacy notice, built as plain HTML, CSS and a small amount of JavaScript. No framework, no build step, no analytics, no cookies.
 
-> **Status: preview only.** The live domain, `zastras.uk`, still serves the Squarespace holding page. Nothing in this repository changes DNS. Publication follows [docs/CUTOVER.md](docs/CUTOVER.md) after the owner approves the design, copy and privacy notice.
+> **Status: live, not yet indexable.** `https://zastras.uk/` serves this site over HTTPS (DNS switched on 23 November 2026). Every page still carries a `noindex` tag until the privacy items in [To-do.md](To-do.md) are closed; removing it is the last step of [docs/CUTOVER.md](docs/CUTOVER.md). Nothing in this repository changes DNS.
 
 | | |
 |---|---|
-| Preview (GitHub Pages) | https://zastras.github.io/zastras.uk/ (marked `noindex` until launch) |
+| Live site (GitHub Pages, custom domain; `noindex` until launch) | https://zastras.uk/ (the old preview address https://zastras.github.io/zastras.uk/ now redirects here) |
 | Intended production URL | https://zastras.uk |
 | Contact form | Formspree, `https://formspree.io/f/maeolban` (public by design) |
 | Company | ZASTRAS LTD, registered in Scotland, SC832156 |
@@ -165,7 +165,7 @@ Publishing uses GitHub Actions (`.github/workflows/pages.yml`):
 - **Pull requests:** run the checks only.
 - **Pushes to `main`** and **manual runs:** run the checks, then publish the `site/` folder.
 
-One-time setup, already done for this repository: *Settings, Pages, Build and deployment, Source: GitHub Actions*. The preview is served at `https://zastras.github.io/zastras.uk/`.
+One-time setup, already done for this repository: *Settings, Pages, Build and deployment, Source: GitHub Actions*. The site is served at `https://zastras.uk/` (the custom domain); the old address `https://zastras.github.io/zastras.uk/` redirects to it.
 
 To publish a branch for review before merging, run the workflow manually against it (Actions, *Check and deploy site*, *Run workflow*, choose the branch). The `github-pages` environment only accepts branches listed under *Settings, Environments, github-pages, Deployment branches*, so add the branch there first. Remove the entry afterwards.
 
