@@ -45,7 +45,7 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 - The hero illustration: a four-step enquiry-handling example (a tenant reporting a leaking tap), explicitly labelled "Illustration" with a note that every workflow starts from the firm's own process.
 - A three-step "what happens next" in the contact section, without any promised response time.
 - "No pressure, and no obligation" in the contact copy.
-- The second profile's role line, **"Applied AI | Security-minded implementation"**, which is derived from the brief's biography rather than supplied. The brief only gave a title and a placeholder for the name. Change or remove it freely.
+- The second profile's role line, **"Applied AI | Security-minded implementation"**, which is derived from the brief's biography rather than supplied. The brief only gave a title and a placeholder for the name. Replaced on 24 November 2026 by the owner's own role line and biography.
 - Line icons for the outcomes and sectors.
 
 **Privacy notice** (rewritten on 23 November 2026 from the owner's decisions; review boxes on the page mark what is open)
@@ -67,7 +67,7 @@ None of these were in the brief. Each is easy to reverse; say if you want any ch
 | Input | Where it goes |
 |---|---|
 | **Lex's photograph** | **Added** (a 6:5 crop of the supplied headshot, two WebP sizes, 34 KB and 12 KB, no metadata). To swap it later: [README, "Replacing the two team images"](../README.md#replacing-the-two-team-images). The original 1.9 MB PNG stays in the project folder and is git-ignored, not committed. |
-| **The applied AI specialist's name and photograph** | Only when that person agrees. Until then the card shows the abstract graphic and the title. Nothing identifying is in the repository, including file names, alt text and commit history. |
+| **The second team member's name and photograph** | **Added** on 24 November 2026, with the role line and biography supplied by the owner. The image file names stay generic. See [README, "Chris Jackson"](../README.md#chris-jackson). |
 | **Notification inbox: who has access** | Delivery is confirmed, and access is the Director only (owner, 23 November 2026). Two-factor authentication on the Formspree account and the mailbox is still to check. |
 | **Privacy-notice open items** | See [To-do.md](../To-do.md): re-check Formspree's Data Privacy Framework entry on launch day, put the 12-month deletion routine in the diary, sign the internal assessment. |
 | **Companies House re-check** on launch day | The legal footer. It matched the official record on 23 November 2026. |

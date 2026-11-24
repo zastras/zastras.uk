@@ -17,7 +17,7 @@ Done and deployed on 24 November 2026 (pull request 17, merge commit `1fb7e77`; 
 
 ## Team page
 
-- [ ] the applied AI specialist's name and photo, only if they agree
+- [x] The second team card now shows its photograph, name, role line and biography, supplied by the owner on 24 November 2026.
 
 ## Costs and retainer terms (retainer terms approved 24 November 2026)
 

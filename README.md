@@ -113,15 +113,13 @@ Lex's photograph is in place: a 6:5 crop of the supplied headshot, exported as W
 3. Overwrite the two files in `site/assets/img/team/`. If the file names, sizes or format change, update `src`, `srcset`, `width`, `height` and `alt` on the `<img>` in the first card.
 4. If the crop cuts off the head, adjust `--portrait-pos` on the surrounding `<figure>` (for example `50% 15%` shows more of the top). A frame that is not exactly 6:5 is cropped by `object-fit: cover`, so nothing breaks.
 
-### The applied AI specialist
+### Chris Jackson
 
-The card shows a 6:5 crop of the supplied photograph, zoomed in from the original (`applied-ai-specialist-1200.webp`, about 22 KB, and `applied-ai-specialist-600.webp`, about 9 KB, referenced with `srcset`), and the public title only. The original photograph is kept locally and not committed. The file names and alt text are deliberately generic. **Do not add a name, initial or any identifying detail until the person has agreed to be named.** When they have:
+The second card shows a 6:5 crop of the supplied photograph, zoomed in from the original (`applied-ai-specialist-1200.webp`, about 22 KB, and `applied-ai-specialist-600.webp`, about 9 KB, referenced with `srcset`). The name, role line and biography are the wording the owner supplied on 24 November 2026. The original photograph is kept locally and not committed.
 
-1. In the second card, replace the `<h3>`, the role line and the biography, and update the `alt` text on the `<img>`.
-2. Optionally rename the two image files under their name (for example `firstname-lastname-1200.webp`) and update `src` and `srcset` to match, and the entry in `scripts/verify-cutover.mjs`.
-3. Keep the `aria-labelledby` and `id` pair in step if you rename the heading's `id`.
-
-To swap in a different photograph, follow the same steps as for Lex: a 6:5 crop, exported at 1200 × 1000 and 600 × 500 px with no metadata (for example `cwebp -q 80 -crop X Y W H -resize 1200 1000 original.jpg -o applied-ai-specialist-1200.webp`).
+- **To edit the wording**, change the `<h3>`, the role line and the biography in the second card, and the `alt` text on the `<img>`. Keep the `aria-labelledby` and heading `id` pair in step.
+- **To swap the photograph**, follow the same steps as for Lex: a 6:5 crop, exported at 1200 × 1000 and 600 × 500 px with no metadata (for example `cwebp -q 80 -crop X Y W H -resize 1200 1000 original.jpg -o applied-ai-specialist-1200.webp`).
+- The image file names are generic. They can be renamed under his name if wanted; update `src` and `srcset` to match, and the entry in `scripts/verify-cutover.mjs`.
 
 Also search the repository for the old title, and remember that file names, alt text and commit messages are all public.
 
