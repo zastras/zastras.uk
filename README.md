@@ -44,7 +44,7 @@ mkdir -p /tmp/pages && ln -sfn "$PWD/site" /tmp/pages/zastras.uk && python3 -m h
 site/                      Everything that is published (this folder is the Pages artifact)
   index.html               The one-page site
   privacy/index.html       Privacy notice (draft, with owner-decision boxes)
-  retainer/index.html      Retainer terms (draft, with an owner-review box listing the figures to confirm)
+  retainer/index.html      Retainer terms
   404.html                 Not-found page
   favicon.ico              Legacy favicon
   robots.txt, sitemap.xml  Search-engine files (absolute URLs on zastras.uk)
@@ -87,7 +87,7 @@ Things to keep in mind when editing:
 - **The legal footer** appears in every HTML page and must stay identical. The check script fails if it changes. Before launch, re-verify it against the [Companies House record](https://find-and-update.company-information.service.gov.uk/company/SC832156).
 - **Outcomes are not guarantees.** Keep wording such as "might look like" and "how we would check", and do not add statistics, client names, testimonials, certifications or logos that are not real and approved. Banks named in Lex's biography are career history, not clients.
 - **Navigation** is duplicated in the header and footer of each page. If you add a section, update both, plus `privacy/index.html` and `retainer/index.html`.
-- **Prices** are in the `costs` section of `site/index.html`. The retainer range (£400 to £900 a month) is repeated in `site/retainer/index.html`, in the summary and in the fees section, so change all three together. The retainer page's owner-review box lists every figure and position in the terms that is a proposal rather than a decision; it blocks `--production` until it is deleted.
+- **Prices** are in the `costs` section of `site/index.html`. The retainer range (£400 to £900 a month) is repeated in `site/retainer/index.html`, in the summary and in the fees section, so change all three together.
 - **Colours and spacing** are CSS custom properties at the top of `main.css`. Change a token there rather than a value in a component.
 - **Page titles, descriptions and Open Graph tags** are in each page's `<head>`. Keep the canonical URLs on `https://zastras.uk`.
 

@@ -62,7 +62,7 @@ This checklist covers: preparing the repository, verifying and configuring the d
   node scripts/check-site.mjs --production
   ```
 
-  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. Once the retainer terms page is merged it fails on eleven items: the three `noindex` tags, the three `PREVIEW-NOINDEX` comments, the draft banners and `[publication date]` placeholders on the privacy and retainer pages, and the retainer page's owner-review box. The retainer page (`site/retainer/index.html`) needs the owner's decisions listed in [To-do.md](../To-do.md). If the owner would rather launch without that page, delete the `site/retainer/` folder, its entry in `site/sitemap.xml`, and the "Retainer terms" links in the footers and the costs section of the home page.
+  At this stage the only failures expected are the `noindex` lines and their marker comments (Section G removes them after the site has been verified live). Anything else it reports must be fixed first. The retainer terms page was approved and dated on 24 November 2026, so it adds nothing to the list beyond its own `noindex` tag and marker comment. The check therefore fails on eight items: the three `noindex` tags, the three `PREVIEW-NOINDEX` comments, and the privacy page's draft banner and `[publication date]` placeholder.
 - [x] The latest run of the *Check and deploy site* workflow on `main` is green and `https://zastras.uk/` shows the approved content (checked 24 November 2026).
 
 ## B. Inventory the existing DNS (before changing anything)
