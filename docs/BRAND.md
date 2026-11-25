@@ -41,7 +41,7 @@ On the site the wordmark is live text beside the mark. Pre-rendered lockups for 
 - `lockup-on-dark.png`, for dark backgrounds (transparent)
 - `lockup-on-light.png`, for light backgrounds (transparent)
 
-The lockups are PNG because the type has not been converted to outlines. If vector lockups are needed (for print or signage), open the source in `docs/brand/source/lockup.html` and outline the text in a design tool, or ask for a vector version.
+Vector lockups with the type converted to outlines (no fonts needed, suitable for print or signage) are in [`docs/brand/assets/logo/`](brand/assets/logo/), along with high-resolution PNGs. The whole ready-to-use set, including the LinkedIn images, is described in [`docs/brand/assets/README.md`](brand/assets/README.md).
 
 **Clear space:** keep at least the height of the tile's ring node free on all sides. **Minimum size:** mark 16 px; full lockup 120 px wide. **Do not:** recolour the mark outside the palette, stretch it, add effects, or place it on busy imagery.
 
@@ -112,4 +112,6 @@ The page metadata points at `https://zastras.uk/assets/img/og-image.png`, so the
 
 ## Regenerating assets
 
-The HTML sources in `docs/brand/source/` (`og-image.html`, `avatar.html`, `lockup.html`) load the fonts from `site/assets/fonts/`. Open them in Chrome and screenshot at the stated size. The favicon PNGs in `docs/brand/source/` were rendered from `favicon.svg` and combined into `site/favicon.ico`.
+The HTML sources in `docs/brand/source/` (`og-image.html`, `avatar.html`, `lockup.html`) load the fonts from `site/assets/fonts/`. Open them in Chrome and screenshot at the stated size. The LinkedIn cover has its own source, `linkedin-cover.html` (1128 × 191; render at device scale 2 for the larger file). Headless Chrome will not render a window narrower than about 500 px correctly, so for small outputs render large and scale down.
+
+The favicon PNGs in `docs/brand/source/` were rendered from `favicon.svg` and combined into `site/favicon.ico`. If they are ever rebuilt, open the result at 16 px and 32 px and look at it: an earlier build contained a broken-image icon instead of the mark. Copies of the current favicon files are in `docs/brand/assets/site/`.

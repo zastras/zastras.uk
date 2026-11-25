@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="t">
+  <title id="t">Zastras Accelerate</title>
+  <!-- Full-bleed square for social avatars and app icons. Platforms apply their own crop (square, rounded square or circle); the mark sits at about 50% of the width so every crop keeps it whole. Matches docs/brand/source/avatar.html. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1D2F52"/>
+      <stop offset="1" stop-color="#0A1222"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g transform="translate(57.6 57.6) scale(6.2)">
+    <path d="M17 19H47L17 45H47" fill="none" stroke="#DCE6FF" stroke-width="5" stroke-linejoin="miter"/>
+    <circle cx="17" cy="19" r="4.8" fill="#8DA8FF"/>
+    <circle cx="47" cy="45" r="6" fill="#0A1222" stroke="#3DDCC8" stroke-width="3.2"/>
+  </g>
+</svg>

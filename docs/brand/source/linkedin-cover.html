@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Source for docs/brand/assets/linkedin/linkedin-cover-*.png. LinkedIn company page cover: 1128x191 (render at device scale 2 for the 2256x382 file).
+     The left 270px is left clear on purpose: LinkedIn overlays the company logo there, and larger still on mobile. -->
+<html lang="en-GB"><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: "Geist"; src: url("../../../site/assets/fonts/geist-latin-wght.woff2") format("woff2"); font-weight: 100 900; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1128px; height: 191px; overflow: hidden; background: #0a1222; }
+  .cover { position: relative; width: 1128px; height: 191px; overflow: hidden; font-family: "Geist", system-ui, sans-serif; color: #fff;
+    background:
+      radial-gradient(520px 300px at 100% -30%, rgba(61,107,255,.34), transparent 70%),
+      radial-gradient(420px 260px at 18% 130%, rgba(61,220,200,.14), transparent 70%),
+      #0a1222; }
+  .grid { position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(141,168,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(141,168,255,.08) 1px, transparent 1px);
+    background-size: 40px 40px; -webkit-mask-image: radial-gradient(ellipse 80% 140% at 75% 30%, #000 10%, transparent 80%); mask-image: radial-gradient(ellipse 80% 140% at 75% 30%, #000 10%, transparent 80%); }
+  h1 { position: absolute; left: 290px; top: 50%; transform: translateY(-50%); width: 560px; font-size: 46px; line-height: 1.05; letter-spacing: -.04em; font-weight: 600; }
+  h1 em { font-style: normal; background: linear-gradient(95deg, #8da8ff, #3ddcc8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .motif { position: absolute; right: -28px; top: 0; width: 360px; height: 191px; }
+</style></head>
+<body><div class="cover">
+  <div class="grid"></div>
+  <h1>AI that <em>earns its place</em><br>in your business.</h1>
+  <!-- The workflow motif from the Open Graph image, laid on its side: a flow ending in the teal checkpoint, where a person decides. -->
+  <svg class="motif" viewBox="0 0 360 191" fill="none">
+    <path d="M20 58H100L160 118H250" stroke="#8da8ff" stroke-opacity=".5" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M250 118H360" stroke="#3ddcc8" stroke-opacity=".5" stroke-width="3"/>
+    <circle cx="20" cy="58" r="11" fill="#0a1222" stroke="#8da8ff" stroke-width="3.5"/>
+    <circle cx="100" cy="58" r="11" fill="#0a1222" stroke="#8da8ff" stroke-width="3.5"/>
+    <circle cx="160" cy="118" r="19" fill="#0a1222" stroke="#3ddcc8" stroke-width="4"/>
+    <circle cx="160" cy="118" r="6" fill="#3ddcc8"/>
+    <circle cx="160" cy="118" r="32" stroke="#3ddcc8" stroke-opacity=".3" stroke-width="1.5"/>
+    <circle cx="250" cy="118" r="11" fill="#0a1222" stroke="#8da8ff" stroke-width="3.5"/>
+  </svg>
+</div></body></html>
